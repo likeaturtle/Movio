@@ -339,6 +339,7 @@ async function saveHandler() {
 
 async function wipeConfigHandler() {
   await sendReport(packetType.wipeConfigMsg, [], true);
+  await readHandler();
 }
 
 // ==================== Range slider fill indicator ====================
