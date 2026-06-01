@@ -21,6 +21,8 @@ const i18n = {
     "Device Status": "设备状态",
     "Movio Function Config": "Movio 功能配置",
     "Function Config": "功能配置",
+    "✓ Executed": "✓ 已执行",
+    "Done": "完成",
 
     // form.py field names
     "Running FW version": "当前固件版本",
@@ -192,11 +194,37 @@ window.addEventListener('load', function () {
   }
 
   this.document.getElementById('menu-buttons').addEventListener('click', function (event) {
-    window[event.target.dataset.handler]();
+    const btn = event.target;
+    const handler = btn.dataset.handler;
+    if (!handler) return;
+
+    const i18nKey = btn.getAttribute('data-i18n');
+    btn.textContent = i18n.translate('✓ Executed');
+    setTimeout(() => {
+      if (i18nKey) btn.textContent = i18n.translate(i18nKey);
+    }, 1000);
+
+    window[handler]();
+    btn.blur();
   })
 });
 
-document.getElementById('submitButton').addEventListener('click', async () => { await saveHandler(); });
+document.getElementById('submitButton').addEventListener('click', async () => {
+    const btn = document.getElementById('submitButton');
+    const i18nKey = btn.getAttribute('data-i18n');
+    await saveHandler();
+    btn.blur();
+    btn.value = i18n.translate('Done');
+    btn.style.backgroundColor = 'transparent';
+    btn.style.borderColor = '#2e7d32';
+    btn.style.color = '#2e7d32';
+    setTimeout(() => {
+      btn.style.backgroundColor = '';
+      btn.style.borderColor = '';
+      btn.style.color = '';
+      if (i18nKey) btn.value = i18n.translate(i18nKey);
+    }, 1000);
+  });
 
 async function connectHandler() {
   if (device && device.opened)

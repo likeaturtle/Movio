@@ -734,6 +734,7 @@ img {
   background-color: transparent;
   color: #ff6600;
   border-color: #ff6600;
+  min-width: 9rem;
 }
 
 #submitButton:focus, #submitButton:hover {
