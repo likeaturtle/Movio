@@ -104,6 +104,7 @@ set(binary deskhop)
 set(DISK_ASM "${CMAKE_CURRENT_LIST_DIR}/disk/disk.S")
 set(DISK_BIN "${CMAKE_CURRENT_LIST_DIR}/disk/disk.img")
 set_property(SOURCE ${DISK_ASM} APPEND PROPERTY COMPILE_OPTIONS "-x" "assembler-with-cpp")
+set_source_files_properties(${DISK_ASM} PROPERTIES OBJECT_DEPENDS "${DISK_BIN}")
 
 add_executable(${binary} ${DISK_ASM})
 
