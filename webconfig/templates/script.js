@@ -1,3 +1,119 @@
+// ==================== i18n Module ====================
+const i18n = {
+  currentLang: localStorage.getItem('movio-lang') || 'zh',
+
+  dict: {
+    // main.html
+    "Oh, no!": "哎呀！",
+    "Unfortunately, your browser does not support WebHID or the Permissions Policy is blocking its usage. Please try Chromium \n          (or Chrome if you have to). Apologies for the inconvenience, hopefully a cross-browser solution happens soon.":
+      "很遗憾，您的浏览器不支持 WebHID，或权限策略阻止了其使用。请尝试使用 Chromium\n          （或 Chrome）。抱歉造成不便，希望跨浏览器解决方案能尽快实现。",
+    "Connect": "连接",
+    "Read": "读取",
+    "Save": "保存",
+    "Exit": "退出",
+    "Blink": "闪烁",
+    "Blink both": "双闪",
+    "Bootloader": "引导模式",
+    "Wipe Config": "清除配置",
+    "Output A": "输出 A",
+    "Output B": "输出 B",
+    "Common Config": "通用配置",
+    "Device Status": "设备状态",
+    "Movio Function Config": "Movio 功能配置",
+    "Function Config": "功能配置",
+
+    // form.py field names
+    "Running FW version": "当前固件版本",
+    "Running FW checksum": "当前固件校验值",
+    "Mouse": "鼠标",
+    "Force Mouse Boot Mode": "强制鼠标启动模式",
+    "Enable Acceleration": "启用加速",
+    "Jump Threshold ": "跳转阈值 ",
+    "Keyboard": "键盘",
+    "Force KBD Boot Protocol": "强制键盘启动协议",
+    "KBD LED as Indicator": "键盘 LED 作为状态灯",
+    "Enforce Ports": "强制端口",
+    "Screen Count": "屏幕数量",
+    "Speed X ": "速度 X ",
+    "Speed Y ": "速度 Y ",
+    "Border Top": "上边界",
+    "Border Bottom": "下边界",
+    "Operating System": "操作系统",
+    "Screen Position": "屏幕位置",
+    "Cursor Park Position": "光标停靠位置",
+    "Screensaver": "屏幕保护",
+    "Mode": "模式",
+    "Only If Inactive": "仅不活跃时",
+    "Idle Time (μs)": "空闲时间 (μs)",
+    "Max Time (μs)": "最大时间 (μs)",
+
+    // Dropdown values
+    "Linux": "Linux",
+    "MacOS": "MacOS",
+    "Windows": "Windows",
+    "Android": "Android",
+    "Other": "其他",
+    "Left": "左",
+    "Right": "右",
+    "Top": "上",
+    "Bottom": "下",
+    "Previous": "上次位置",
+    "Disabled": "禁用",
+    "Pong": "弹球",
+    "Jitter": "抖动",
+    "None": "无",
+    "Backspace": "退格",
+    "Caps Lock": "大小写",
+    "Tab": "制表",
+    "Print Screen": "打印屏幕",
+    "Scroll Lock": "滚动锁定",
+    "Num Lock": "数字锁定",
+  },
+
+  translate(key) {
+    if (this.currentLang === 'zh' && this.dict[key]) return this.dict[key];
+    return key;
+  },
+
+  apply() {
+    // Translate elements with data-i18n attribute
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (el.tagName === 'TITLE') {
+        document.title = this.translate(key);
+      } else if (el.tagName === 'OPTION') {
+        el.textContent = this.translate(key);
+      } else if (el.tagName === 'INPUT' && el.type === 'submit') {
+        el.value = this.translate(key);
+      } else {
+        el.textContent = this.translate(key);
+      }
+    });
+    // Sync language switch highlight
+    document.querySelectorAll('.lang-opt').forEach(opt => {
+      opt.classList.toggle('active', opt.dataset.lang === this.currentLang);
+    });
+  },
+
+  setLang(lang) {
+    this.currentLang = lang;
+    localStorage.setItem('movio-lang', this.currentLang);
+    this.apply();
+  },
+
+  toggle() {
+    this.setLang(this.currentLang === 'en' ? 'zh' : 'en');
+  },
+
+  init() {
+    this.apply();
+  }
+};
+
+// Apply translations on DOM ready
+document.addEventListener('DOMContentLoaded', () => i18n.init());
+// ==================== End i18n Module ====================
+
 const mgmtReportId = 6;
 var device;
 
@@ -156,6 +272,10 @@ function updateElement(key, event) {
       const minor = (value - 100) % 1000;
       setValue(element, `v${major}.${minor}`);
     }
+
+    /* Range slider: sync fill indicator (range input is sibling, not first in DOM) */
+    const rangeEl = document.querySelector(`input.range[data-key="${key}"]`);
+    if (rangeEl) updateRangeFill(rangeEl);
   }
 }
 
@@ -178,7 +298,7 @@ async function rebootHandler() {
 }
 
 async function enterBootloaderHandler() {
-  await sendReport(packetType.firmwareUpgradeMsg, true, true);
+  await sendReport(packetType.firmwareUpgradeMsg, null, true);
 }
 
 async function valueChangedHandler(element) {
@@ -220,3 +340,19 @@ async function saveHandler() {
 async function wipeConfigHandler() {
   await sendReport(packetType.wipeConfigMsg, [], true);
 }
+
+// ==================== Range slider fill indicator ====================
+function updateRangeFill(range) {
+  const min = parseFloat(range.min) || 0;
+  const max = parseFloat(range.max) || 100;
+  const val = parseFloat(range.value) || 0;
+  const pct = ((val - min) / (max - min)) * 100;
+  range.style.setProperty('--range-fill', pct + '%');
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  document.querySelectorAll('input[type="range"].range').forEach(function (range) {
+    range.addEventListener('input', function () { updateRangeFill(this); });
+    updateRangeFill(range);
+  });
+});

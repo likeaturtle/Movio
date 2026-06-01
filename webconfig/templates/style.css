@@ -15,7 +15,7 @@
 :root {
   --highlight-color: #384955;
   --font-color: #384955;
-  --highlight-color2: #5e9f41;
+  --highlight-color2: #ff6600;
 }
 
 html {
@@ -54,8 +54,8 @@ input[type='submit'] {
   color: #fff;
   cursor: pointer;
   display: inline-block;
-  font-size: 1.1rem;
-  font-weight: 700;
+  font-size: 1.3rem;
+  font-weight: 500;
   height: 3.8rem;
   letter-spacing: .1rem;
   line-height: 3.8rem;
@@ -203,7 +203,7 @@ pre > code {
 
 hr {
   border: 0;
-  border-top: 0.1rem dotted lightblue;
+  border-top: 0.1rem solid rgb(209, 209, 209);
   margin: 1.0rem 3.0rem;
 }
 
@@ -224,6 +224,7 @@ input:not([type]),
 textarea,
 select {
   -webkit-appearance: none;
+  appearance: none;
   background-color: transparent;
   border: 0.1rem solid #d1d1d1;
   border-radius: .4rem;
@@ -312,6 +313,70 @@ input[type='number'].input-inline {
 
 .range {
   width: 100%;
+}
+
+/* Compact range form: reduce internal component spacing */
+.range-form {
+  margin-bottom: 1.5rem;
+}
+
+.range-form label {
+  margin-bottom: 0.2rem;
+}
+
+.range-form input {
+  margin-bottom: 0.5rem;
+}
+
+/* Range slider - custom styling to avoid Chromium Linux accent-color rendering bug */
+input[type='range'].range {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 20px;
+  background: transparent;
+  vertical-align: middle;
+}
+
+input[type='range'].range::-webkit-slider-runnable-track {
+  height: 4px;
+  background: linear-gradient(to right, #ff6600 var(--range-fill, 50%), #d1d1d1 var(--range-fill, 50%));
+  border-radius: 2px;
+  border: none;
+}
+
+input[type='range'].range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #ff6600;
+  border: none;
+  margin-top: -5px;
+  cursor: pointer;
+}
+
+input[type='range'].range::-moz-range-track {
+  height: 4px;
+  background: #d1d1d1;
+  border-radius: 2px;
+  border: none;
+}
+
+input[type='range'].range::-moz-range-progress {
+  height: 4px;
+  background: #ff6600;
+  border-radius: 2px;
+}
+
+input[type='range'].range::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #ff6600;
+  border: none;
+  cursor: pointer;
 }
 
 .container {
@@ -604,7 +669,7 @@ h4,
 h5,
 h6 {
   font-weight: 300;
-  letter-spacing: -.1rem;
+  /* letter-spacing: -.1rem; */
   margin-bottom: 2.0rem;
   margin-top: 0;
 }
@@ -662,4 +727,48 @@ img {
 
 .online {
   opacity: 0.5;
+}
+
+/* Submit button - outline style with #ff6600 */
+#submitButton {
+  background-color: transparent;
+  color: #ff6600;
+  border-color: #ff6600;
+}
+
+#submitButton:focus, #submitButton:hover {
+  background-color: #ff6600;
+  color: #fff;
+  border-color: #ff6600;
+}
+
+#submitButton[disabled]:focus, #submitButton[disabled]:hover {
+  background-color: transparent;
+  color: #ff6600;
+  border-color: #ff6600;
+}
+
+/* Dashed divider below Border Top fields */
+.border-top-divider {
+  border-bottom: 1.5px dashed #b0c4de;
+  margin: 0rem -1rem 1.5rem -1rem;
+}
+
+/* Language switch */
+.lang-switch {
+  cursor: pointer;
+  font-size: 1.5rem;
+  font-weight: 350;
+  letter-spacing: -.05rem;
+  user-select: none;
+  color: #aaa;
+}
+
+.lang-opt {
+  transition: color 0.15s;
+}
+
+.lang-opt.active {
+  color: #ff6600;
+  font-weight: 450;
 }

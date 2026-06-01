@@ -8,12 +8,12 @@
 {% endmacro %}
 
 {% macro label(item, class='label-inline', add='') %}
-<label class="{{class}}"> {{ item.name }}{{ add }}</label>
+<label class="{{class}}"><span data-i18n="{{ item.name }}">{{ item.name }}</span>{{ add }}</label>
 {% endmacro %}
 
 {% block form_render %}
   {% if item.get("elem") == "hex_info" %}
-    {{ label(item, add=':') }}
+    {{ label(item, class='') }}
     {{ input(item, class='content api') }} data-hex readonly />
 
   {% elif item.get("elem") == "fw_version" %}
@@ -21,11 +21,12 @@
     {{ input(item) }} data-fw-ver readonly />
 
   {% elif item.get("elem") == "label" %}
+    {% if item.name == "Screensaver" %}<div class="border-top-divider"></div>{% endif %}
     {{ label(item, class='') }}
 
   {% elif item.get("elem") == "range" %}
   <div class="clearfix">
-    <form>
+    <form class="range-form">
       {{ label(item, add='=') }}
 
       {{ input(item, class='input-inline', type='number', name='aInput') }}
@@ -50,12 +51,13 @@
     <option disabled selected value></option>
 
     {% for k, v in item["values"].items() %}
-    <option value="{{ k }}">{{ v }}</option>
+    <option value="{{ k }}" data-i18n="{{ v }}">{{ v }}</option>
     {% endfor %}
     </select><br />
 
   {% else %}
-      {{ label(item, class='') }}
+      {% if item.name == "Border Top" %}<div class="border-top-divider"></div>{% endif %}
+      {{ label(item, class='', add='') }}
       {{ input(item) }}  />
 
   {% endif %}
