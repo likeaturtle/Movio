@@ -104,7 +104,7 @@
  * the maximum (if one has been specified). This allows you to stop a
  * screensaver/screenlock from activating while you are still at your
  * desk (but just interacting with the other computer attached to
- * Deskhop), but let it activate if you leave your desk for an
+ * Movio), but let it activate if you leave your desk for an
  * extended period of time.
  *
  * Additionally, this mode can be automatically disabled if the output

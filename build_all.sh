@@ -17,6 +17,28 @@ log()  { echo -e "${GREEN}[+]${NC} $*"; }
 warn() { echo -e "${YELLOW}[!]${NC} $*"; }
 die()  { echo -e "${RED}[x]${NC} $*"; exit 1; }
 
+# ── Version input ────────────────────────────────────────────────────────────
+LAST_VER_FILE="$BUILD_DIR/.last_version"
+LAST_VER=""
+[ -f "$LAST_VER_FILE" ] && LAST_VER=$(cat "$LAST_VER_FILE")
+
+if [ -n "$LAST_VER" ]; then
+    read -rp "$(echo -e "${YELLOW}[?]${NC} Version [${LAST_VER}]: ")" VERSION
+    VERSION="${VERSION:-$LAST_VER}"
+else
+    read -rp "$(echo -e "${YELLOW}[?]${NC} Version: ")" VERSION
+    [ -z "$VERSION" ] && die "Version cannot be empty on first run"
+fi
+mkdir -p "$BUILD_DIR"
+echo "$VERSION" > "$LAST_VER_FILE"
+log "Version: $VERSION"
+
+# Parse version: "0.79" -> MAJOR=0, MINOR=79
+VER_MAJOR="${VERSION%%.*}"
+VER_MINOR="${VERSION#*.}"
+[[ "$VER_MAJOR" =~ ^[0-9]+$ ]] && [[ "$VER_MINOR" =~ ^[0-9]+$ ]] \
+    || die "Invalid version format '$VERSION' (expected: MAJOR.MINOR, e.g. 0.79)"
+
 # ── Step 1: Generate config.htm ──────────────────────────────────────────────
 log "Step 1/3: Generating config.htm ..."
 cd "$WEB_DIR"
@@ -27,39 +49,15 @@ log "  config.htm generated ($UNPACKED_SIZE bytes)"
 
 # ── Step 2: Pack into disk image ─────────────────────────────────────────────
 log "Step 2/3: Packing into disk image ..."
-
-NEED_PACK=1
-if [ -f "$DISK_IMG" ] && [ -f "$DISK_DIR/.config_htm_hash" ]; then
-    OLD_HASH=$(cat "$DISK_DIR/.config_htm_hash")
-    NEW_HASH=$(sha256sum "$CONFIG_HTM" | awk '{print $1}')
-    if [ "$OLD_HASH" = "$NEW_HASH" ]; then
-        warn "  config.htm unchanged, skipping disk image rebuild"
-        NEED_PACK=0
-    fi
-fi
-
-if [ "$NEED_PACK" -eq 1 ]; then
-    cd "$DISK_DIR"
-    sudo ./create.sh || die "create.sh failed"
-    sha256sum "$CONFIG_HTM" | awk '{print $1}' > "$DISK_DIR/.config_htm_hash"
-    log "  disk.img updated"
-fi
+cd "$DISK_DIR"
+sudo ./create.sh || die "create.sh failed"
+sha256sum "$CONFIG_HTM" | awk '{print $1}' > "$DISK_DIR/.config_htm_hash"
+log "  disk.img updated"
 
 # ── Step 3: Build firmware ───────────────────────────────────────────────────
 log "Step 3/3: Building firmware ..."
 cd "$ROOT"
-
-NEED_RECONFIGURE=0
-if [ ! -f "$BUILD_DIR/CMakeCache.txt" ]; then
-    NEED_RECONFIGURE=1
-elif [ "$ROOT/CMakeLists.txt" -nt "$BUILD_DIR/CMakeCache.txt" ]; then
-    warn "  CMakeLists.txt changed, reconfiguring ..."
-    NEED_RECONFIGURE=1
-fi
-
-if [ "$NEED_RECONFIGURE" -eq 1 ]; then
-    cmake -S . -B "$BUILD_DIR" || die "cmake configure failed"
-fi
+cmake -S . -B "$BUILD_DIR" -DVERSION_MAJOR="$VER_MAJOR" -DVERSION_MINOR="$VER_MINOR" || die "cmake configure failed"
 
 cmake --build "$BUILD_DIR" || die "cmake build failed"
 
@@ -69,6 +67,7 @@ if [ -n "$UF2" ]; then
     UF2_SIZE=$(wc -c < "$UF2")
     echo ""
     log "========== Build Complete =========="
+    log "  version    : $VERSION"
     log "  config.htm : $UNPACKED_SIZE bytes"
     log "  disk.img   : $(wc -c < "$DISK_IMG") bytes"
     log "  firmware   : $UF2_SIZE bytes → $(basename "$UF2")"

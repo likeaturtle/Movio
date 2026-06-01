@@ -2,8 +2,12 @@ cmake_minimum_required(VERSION 3.6)
 
 ## Version Configuration.
 ## Define e.g. 0.72 as major 0 and minor 72
-set(VERSION_MAJOR 0)
-set(VERSION_MINOR 79)
+if(NOT DEFINED VERSION_MAJOR)
+  set(VERSION_MAJOR 0)
+endif()
+if(NOT DEFINED VERSION_MINOR)
+  set(VERSION_MINOR 79)
+endif()
 
 ## Release Type Selection
 option(DH_DEBUG "Build a debug version" OFF)
