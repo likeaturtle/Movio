@@ -1,4 +1,4 @@
-# DeskHop - Fast Desktop Switching
+# Movio - Fast Desktop Switching
 
 Did you ever notice how, in the crazy world of tech, there's always that one quirky little project trying to solve a problem so niche that its only competitors might be a left-handed screwdriver and a self-hiding alarm clock?
 
@@ -6,7 +6,7 @@ I use two different computers in my daily workflow and share a single keyboard/m
 
 All I wanted was a way to use a keyboard shortcut to quickly switch outputs, paired with the ability to do the same by magically moving the mouse pointer between monitors. This project enables you to do both, even if your computers run different operating systems!
 
-![DeskHop case and board](img/case_and_board_s.png)
+![Movio case and board](img/case_and_board_s.png)
 
 ## Features
 
@@ -35,7 +35,7 @@ To get the mouse cursor to magically jump across, the mouse hid report descripto
 
 When you try to leave the monitor area in the direction of the other monitor, it keeps the Y coordinate and swaps the maximum X for a minimum X, then flips the outputs. This ensures that the cursor seamlessly appears at the same height on the other monitor, enhancing the perception of a smooth transition.
 
-![DeskHop Mouse Demo](img/deskhop-demo.gif)
+![Movio Mouse Demo](img/deskhop-demo.gif)
 
 <p align="center"> Dragging the mouse from Mac to Linux automatically switches outputs. </p>
 
@@ -51,7 +51,7 @@ To have a visual indication which output you are using at any given moment, you 
 
 It also remembers the LED state for each computer, so you can pick up exactly how you left it.
 
-![DeskHop Typing Demo](img/demo-typing.gif)
+![Movio Typing Demo](img/demo-typing.gif)
 
 ## How to build
 
@@ -92,7 +92,7 @@ Alternatively, you can use the [pre-built images](https://github.com/hrvach/desk
 
 ## Upgrading firmware
 
-**Option 1** - (firmware 0.6 and later) Put the device in "config mode" by simultaneously pressing **left ctrl + right shift + c + o**. Device your keyboard is plugged into will reboot and turn into a USB drive called "DESKHOP". All you need to do is copy the .uf2 file to it. Once image is verified, device will flash and reboot, then proceed to upgrade the other board. During this operation the led will blink. Once it's done, it will write flash and reboot, completing the operation.
+**Option 1** - (firmware 0.6 and later) Put the device in "config mode" by simultaneously pressing **left ctrl + right shift + c + o**. Device your keyboard is plugged into will reboot and turn into a USB drive called "MOVIO". All you need to do is copy the .uf2 file to it. Once image is verified, device will flash and reboot, then proceed to upgrade the other board. During this operation the led will blink. Once it's done, it will write flash and reboot, completing the operation.
 
 _Note_ - This is not an actual generic USB drive, you can't use it to copy files to it.
 
@@ -174,7 +174,7 @@ Micro USB connectors on both boards are offset from the side of the case, so sli
 
 The lid is of a snap-fit design, with a screwdriver slot for opening. The markings on top are recessed and can be finished with e.g. crayons to give better contrast (or simply left as-is).
 
-![DeskHop with 3D Printed Case](img/deskhop-case.gif)
+![Movio with 3D Printed Case](img/deskhop-case.gif)
 
 ## Bill of materials
 
@@ -274,11 +274,11 @@ Starting with fw 0.6, an improved configuration mode is introduced. To configure
 
 1. Press Left Ctrl + Right Shift + C + O - your device will reboot and enter configuration mode (on the side your keyboard is plugged into). LED will keep blinking during the configuration session.
 
-1. A new USB drive will appear named "DESKHOP" with a single file, config.htm
+1. A new USB drive will appear named "MOVIO" with a single file, config.htm
 
 1. Open that file with Chromium / Chrome. Unfortunately FF is not supported right now, since they avoid implementing WebHID.
 
-1. Click connect and allow deskhop device to pair.
+1. Click connect and allow movio device to pair.
 
    ![Web Browser with URL](img/connect-dialog.png)
 
@@ -295,7 +295,7 @@ Starting with fw 0.6, an improved configuration mode is introduced. To configure
 
 **A**: You probably need to tweak /dev permissions or create a corresponding udev rules file and make sure your user is in the right group, like so:
 
-/etc/udev/rules.d/99-deskhop.rules
+/etc/udev/rules.d/99-movio.rules
 
 ```plain
 KERNEL=="hidraw*", SUBSYSTEM=="hidraw", ATTRS{idVendor}=="1209", ATTRS{idProduct}=="c000", GROUP="plugdev", MODE="0660"

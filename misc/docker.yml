@@ -1,7 +1,7 @@
 services:
   build_container:
-    image: deskhop-build
+    image: movio-build
     build:
       context: .
     volumes:
-      - ..:/deskhop:z
+      - ..:/movio:z

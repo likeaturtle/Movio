@@ -21,7 +21,7 @@ set(SRC_DIR ${CMAKE_CURRENT_LIST_DIR}/src)
 include(${PICO_SDK_PATH}/pico_sdk_import.cmake)
 
 ## Project Setup
-project(deskhop_project C CXX ASM)
+project(movio_project C CXX ASM)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
 set(PICO_COPY_TO_RAM 1)
@@ -95,7 +95,7 @@ set(COMMON_LINK_LIBRARIES
   pico_unique_id
   Pico-PIO-USB
 )
-set(binary deskhop)
+set(binary movio)
 
 ## Disk Image Configuration
 # This assembles disk.S, then updates the elf section in post-build
