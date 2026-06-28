@@ -54,7 +54,7 @@ int32_t get_report_value(uint8_t *report, int len, report_val_t *val) {
 void handle_consumer_control_values(report_val_t *src, report_val_t *dst, hid_interface_t *iface) {
     keyboard_t *keyboard = get_keyboard(iface, src->report_id);
 
-    if (src->offset > MAX_CC_BUTTONS) {
+    if (src->offset >= MAX_CC_BUTTONS) {
         return;
     }
 
@@ -70,7 +70,7 @@ void handle_consumer_control_values(report_val_t *src, report_val_t *dst, hid_in
 void handle_system_control_values(report_val_t *src, report_val_t *dst, hid_interface_t *iface) {
     keyboard_t *keyboard = get_keyboard(iface, src->report_id);
 
-    if (src->offset > MAX_SYS_BUTTONS) {
+    if (src->offset >= MAX_SYS_BUTTONS) {
         return;
     }
 
@@ -276,6 +276,9 @@ int32_t _extract_kbd_other(uint8_t *raw_report, int len, hid_interface_t *iface,
     if (iface->uses_report_id)
         src++;
 
+    if (kb->modifier.offset_idx >= len)
+        return -1;
+
     report->modifier = src[kb->modifier.offset_idx];
     for (int i=0, j=0; i < MAX_KEYS && j < KEYS_IN_USB_REPORT; i++) {
         if(kb->key_array[i])
@@ -320,9 +323,15 @@ int32_t extract_kbd_data(
     if (iface->protocol == HID_PROTOCOL_BOOT)
         return _extract_kbd_boot(raw_report, len, report);
 
-    /* NKRO is a special case */
-    if (keyboard->is_nkro)
-        return _extract_kbd_nkro(raw_report, len, iface, report);
+    /* NKRO is a special case. If extraction fails (descriptor parsed as NKRO but the
+       actual report layout doesn't match — e.g. wireless dongles that advertise an NKRO
+       collection but transmit standard boot-style reports), fall through to other extractors. */
+    if (keyboard->is_nkro) {
+        int32_t ret = _extract_kbd_nkro(raw_report, len, iface, report);
+        if (ret >= 0)
+            return ret;
+        memset(report, 0, KBD_REPORT_LENGTH);
+    }
 
     /* If we're getting 8 bytes of report, it's safe to assume standard modifier + reserved + keys */
     if (!iface->uses_report_id && (len == KBD_REPORT_LENGTH || len == KBD_REPORT_LENGTH + 1))
