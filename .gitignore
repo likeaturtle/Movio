@@ -1,5 +1,28 @@
-build
+# Build output
+build/
 
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Disk image intermediate
 disk/.config_htm_hash
 
-.idea/
+# Compiled objects
+*.o
+*.d
+*.su
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.venv/
