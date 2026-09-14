@@ -136,3 +136,11 @@ jobs:
     - name: Upload version.json to COS
       run: |
         coscmd upload version.json "${{ env.COS_BASE_PATH }}/version.json"
+
+    - name: Trigger cos-index update
+      run: |
+        curl -X POST \
+          -H "Authorization: token ${{ secrets.CROSS_REPO_PAT }}" \
+          -H "Accept: application/vnd.github.v3+json" \
+          https://api.github.com/repos/likeaturtle/cos-index-repo/actions/workflows/update-cos-index.yml/dispatches \
+          -d '{"ref":"main"}'
