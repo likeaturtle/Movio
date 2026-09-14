@@ -1,12 +1,6 @@
 name: build-and-release
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
   workflow_dispatch:
 
 permissions:
@@ -65,16 +59,14 @@ jobs:
         name: movio-v${{ steps.version.outputs.version }}-${{ github.run_number }}
         path: build/movio.uf2
 
-    # ── Release steps (workflow_dispatch only) ───────────
+    # ── Release ────────────────────────────────────────
 
     - name: Package release artifacts
-      if: github.event_name == 'workflow_dispatch'
       run: |
         mkdir -p release
         cp build/movio.uf2 release/
 
     - name: Compute checksums
-      if: github.event_name == 'workflow_dispatch'
       run: |
         cd release
         for f in *; do
@@ -83,7 +75,6 @@ jobs:
         cat checksums.txt
 
     - name: Create GitHub Release
-      if: github.event_name == 'workflow_dispatch'
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
@@ -97,29 +88,24 @@ jobs:
         fi
 
     - name: Install coscmd
-      if: github.event_name == 'workflow_dispatch'
       run: pip install coscmd
 
     - name: Configure coscmd
-      if: github.event_name == 'workflow_dispatch'
       run: |
         coscmd config -a "${{ secrets.TENCENT_SECRET_ID }}" -s "${{ secrets.TENCENT_SECRET_KEY }}" \
           -b "${{ secrets.TENCENT_COS_BUCKET }}" -r "${{ secrets.TENCENT_COS_REGION }}"
 
     - name: Upload firmware to COS (versioned)
-      if: github.event_name == 'workflow_dispatch'
       run: |
         COS_BASE_PATH="movio/firmware"
         echo "COS_BASE_PATH=$COS_BASE_PATH" >> $GITHUB_ENV
         coscmd upload -r release/ "${COS_BASE_PATH}/${{ env.VERSION }}/"
 
     - name: Upload firmware to COS (latest)
-      if: github.event_name == 'workflow_dispatch'
       run: |
         coscmd upload -r --delete release/ "${{ env.COS_BASE_PATH }}/latest/"
 
     - name: Build version.json
-      if: github.event_name == 'workflow_dispatch'
       run: |
         UF2_SIZE=$(stat -c%s release/movio.uf2)
         UF2_SHA=$(grep movio.uf2 release/checksums.txt | awk '{print $1}')
@@ -148,6 +134,5 @@ jobs:
         cat version.json
 
     - name: Upload version.json to COS
-      if: github.event_name == 'workflow_dispatch'
       run: |
         coscmd upload version.json "${{ env.COS_BASE_PATH }}/version.json"
