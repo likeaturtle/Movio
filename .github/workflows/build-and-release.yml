@@ -1,0 +1,153 @@
+name: build-and-release
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Install build deps
+      shell: bash
+      run: |
+        sudo apt-get install -y \
+          gcc-arm-none-eabi \
+          libnewlib-arm-none-eabi \
+          dosfstools
+
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Render webconfig
+      shell: bash
+      working-directory: webconfig
+      run: make
+
+    - name: Build disk image
+      shell: bash
+      working-directory: disk
+      run: ./create.sh
+
+    - name: Read version
+      id: version
+      shell: bash
+      run: |
+        VERSION=$(cat VERSION | tr -d '[:space:]')
+        MAJOR="${VERSION%%.*}"
+        MINOR="${VERSION#*.}"
+        echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+        echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+        echo "major=$MAJOR" >> "$GITHUB_OUTPUT"
+        echo "minor=$MINOR" >> "$GITHUB_OUTPUT"
+        echo "Building version $VERSION (major=$MAJOR, minor=$MINOR)"
+
+    - name: Build firmware
+      shell: bash
+      run: |
+        cmake -S . -B build \
+          -DVERSION_MAJOR=${{ steps.version.outputs.major }} \
+          -DVERSION_MINOR=${{ steps.version.outputs.minor }}
+        cmake --build build
+
+    - name: Publish build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: movio-v${{ steps.version.outputs.version }}-${{ github.run_number }}
+        path: build/movio.uf2
+
+    # ── Release steps (workflow_dispatch only) ───────────
+
+    - name: Package release artifacts
+      if: github.event_name == 'workflow_dispatch'
+      run: |
+        mkdir -p release
+        cp build/movio.uf2 release/
+
+    - name: Compute checksums
+      if: github.event_name == 'workflow_dispatch'
+      run: |
+        cd release
+        for f in *; do
+          sha256sum "$f" >> checksums.txt
+        done
+        cat checksums.txt
+
+    - name: Create GitHub Release
+      if: github.event_name == 'workflow_dispatch'
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        if gh release view "v${{ env.VERSION }}" >/dev/null 2>&1; then
+          echo "Release v${{ env.VERSION }} already exists, skipping creation."
+        else
+          gh release create "v${{ env.VERSION }}" \
+            --title "v${{ env.VERSION }}" \
+            --generate-notes \
+            release/movio.uf2
+        fi
+
+    - name: Install coscmd
+      if: github.event_name == 'workflow_dispatch'
+      run: pip install coscmd
+
+    - name: Configure coscmd
+      if: github.event_name == 'workflow_dispatch'
+      run: |
+        coscmd config -a "${{ secrets.TENCENT_SECRET_ID }}" -s "${{ secrets.TENCENT_SECRET_KEY }}" \
+          -b "${{ secrets.TENCENT_COS_BUCKET }}" -r "${{ secrets.TENCENT_COS_REGION }}"
+
+    - name: Upload firmware to COS (versioned)
+      if: github.event_name == 'workflow_dispatch'
+      run: |
+        COS_BASE_PATH="movio/firmware"
+        echo "COS_BASE_PATH=$COS_BASE_PATH" >> $GITHUB_ENV
+        coscmd upload -r release/ "${COS_BASE_PATH}/${{ env.VERSION }}/"
+
+    - name: Upload firmware to COS (latest)
+      if: github.event_name == 'workflow_dispatch'
+      run: |
+        coscmd upload -r --delete release/ "${{ env.COS_BASE_PATH }}/latest/"
+
+    - name: Build version.json
+      if: github.event_name == 'workflow_dispatch'
+      run: |
+        UF2_SIZE=$(stat -c%s release/movio.uf2)
+        UF2_SHA=$(grep movio.uf2 release/checksums.txt | awk '{print $1}')
+
+        GIT_COMMIT=$(git rev-parse --short HEAD)
+        GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+        BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+
+        COS_BASE="https://${{ secrets.TENCENT_COS_BUCKET }}.cos.${{ secrets.TENCENT_COS_REGION }}.myqcloud.com"
+
+        cat > version.json <<EOF
+        {
+          "version": "${{ env.VERSION }}",
+          "date": "$BUILD_DATE",
+          "git_commit": "$GIT_COMMIT",
+          "git_branch": "$GIT_BRANCH",
+          "github_release": "https://github.com/${{ github.repository }}/releases/tag/v${{ env.VERSION }}",
+          "firmware": {
+            "url": "$COS_BASE/${{ env.COS_BASE_PATH }}/latest/movio.uf2",
+            "versioned_url": "$COS_BASE/${{ env.COS_BASE_PATH }}/${{ env.VERSION }}/movio.uf2",
+            "size": $UF2_SIZE,
+            "sha256": "$UF2_SHA"
+          }
+        }
+        EOF
+        cat version.json
+
+    - name: Upload version.json to COS
+      if: github.event_name == 'workflow_dispatch'
+      run: |
+        coscmd upload version.json "${{ env.COS_BASE_PATH }}/version.json"

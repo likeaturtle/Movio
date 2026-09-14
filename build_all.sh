@@ -18,19 +18,20 @@ warn() { echo -e "${YELLOW}[!]${NC} $*"; }
 die()  { echo -e "${RED}[x]${NC} $*"; exit 1; }
 
 # ── Version input ────────────────────────────────────────────────────────────
-LAST_VER_FILE="$BUILD_DIR/.last_version"
-LAST_VER=""
-[ -f "$LAST_VER_FILE" ] && LAST_VER=$(cat "$LAST_VER_FILE")
+VERSION_FILE="$ROOT/VERSION"
+[ -f "$VERSION_FILE" ] || die "VERSION file not found at $VERSION_FILE"
 
-if [ -n "$LAST_VER" ]; then
-    read -rp "$(echo -e "${YELLOW}[?]${NC} Version [${LAST_VER}]: ")" VERSION
-    VERSION="${VERSION:-$LAST_VER}"
-else
-    read -rp "$(echo -e "${YELLOW}[?]${NC} Version: ")" VERSION
-    [ -z "$VERSION" ] && die "Version cannot be empty on first run"
+DEFAULT_VERSION=$(cat "$VERSION_FILE" | tr -d '[:space:]')
+[ -z "$DEFAULT_VERSION" ] && die "VERSION file is empty"
+
+read -rp "$(echo -e "${YELLOW}[?]${NC} Version [${DEFAULT_VERSION}]: ")" VERSION
+VERSION="${VERSION:-$DEFAULT_VERSION}"
+
+# Write back to VERSION file if changed
+if [ "$VERSION" != "$DEFAULT_VERSION" ]; then
+    echo "$VERSION" > "$VERSION_FILE"
+    log "Updated VERSION file to $VERSION"
 fi
-mkdir -p "$BUILD_DIR"
-echo "$VERSION" > "$LAST_VER_FILE"
 log "Version: $VERSION"
 
 # Parse version: "0.79" -> MAJOR=0, MINOR=79
