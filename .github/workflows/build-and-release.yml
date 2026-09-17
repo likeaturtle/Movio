@@ -106,15 +106,21 @@ jobs:
         coscmd upload -r --delete release/ "${{ env.COS_BASE_PATH }}/latest/"
 
     - name: Build version.json
+      env:
+        COS_DOMAIN: ${{ secrets.TENCENT_COS_DOMAIN }}
       run: |
+        if [ -z "$COS_DOMAIN" ]; then
+          echo "TENCENT_COS_DOMAIN secret is required, e.g. dl.acenova.tech (no scheme)"
+          exit 1
+        fi
+        COS_BASE="https://${COS_DOMAIN}"
+
         UF2_SIZE=$(stat -c%s release/movio.uf2)
         UF2_SHA=$(grep movio.uf2 release/checksums.txt | awk '{print $1}')
 
         GIT_COMMIT=$(git rev-parse --short HEAD)
         GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
         BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-
-        COS_BASE="https://${{ secrets.TENCENT_COS_BUCKET }}.cos.${{ secrets.TENCENT_COS_REGION }}.myqcloud.com"
 
         cat > version.json <<EOF
         {
