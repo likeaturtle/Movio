@@ -399,6 +399,12 @@ void process_mouse_queue_task(device_t *state) {
     if (!tud_hid_n_ready(ITF_NUM_HID))
         return;
 
+    /* If the interface is configured as a keyboard in boot protocol, discard mouse data. */
+    if (report.mode == ABSOLUTE && tud_hid_n_get_protocol(ITF_NUM_HID) == HID_PROTOCOL_BOOT) {
+        queue_try_remove(&state->mouse_queue, &report);
+        return;
+    }
+
     /* Try sending it to the host, if it's successful */
     bool succeeded
         = tud_mouse_report(report.mode, report.buttons, report.x, report.y, report.wheel, report.pan);

@@ -181,6 +181,12 @@ void process_hid_queue_task(device_t *state) {
     if (!tud_hid_n_ready(packet.instance))
         return;
 
+    /* Only the keyboard interface can be in boot protocol, so discard other reports. */
+    if (tud_hid_n_get_protocol(packet.instance) == HID_PROTOCOL_BOOT) {
+        queue_try_remove(&state->hid_queue_out, &packet);
+        return;
+    }
+
     /* ... try sending it to the host, if it's successful */
     bool succeeded = tud_hid_n_report(packet.instance, packet.report_id, packet.data, packet.len);
 
@@ -197,8 +203,16 @@ void firmware_upgrade_task(device_t *state) {
     if (queue_is_full(&state->uart_tx_queue))
         return;
 
+    /* If we're on the last element of the current page, page is done - write it.
+       Address zero is not the end of a page: nothing has arrived yet */
+    if (TU_U32_BYTE0(state->fw.address) == 0x00 && state->fw.address != 0) {
+
+        uint32_t page_start_addr = (state->fw.address - 1) & 0xFFFFFF00;
+        write_flash_page((uint32_t)ADDR_FW_RUNNING + page_start_addr - XIP_BASE, state->page_buffer);
+    }
+
     /* End condition, when reached the process is completed. */
-    if (state->fw.address > STAGING_IMAGE_SIZE) {
+    if (state->fw.address >= STAGING_IMAGE_SIZE) {
         state->fw.upgrade_in_progress = 0;
         state->fw.checksum = ~state->fw.checksum;
 
@@ -212,13 +226,8 @@ void firmware_upgrade_task(device_t *state) {
             state->_running_fw = _firmware_metadata;
             global_state.reboot_requested = true;
         }
-    }
 
-    /* If we're on the last element of the current page, page is done - write it. */
-    if (TU_U32_BYTE0(state->fw.address) == 0x00) {
-
-        uint32_t page_start_addr = (state->fw.address - 1) & 0xFFFFFF00;
-        write_flash_page((uint32_t)ADDR_FW_RUNNING + page_start_addr - XIP_BASE, state->page_buffer);
+        return;
     }
 
     request_byte(state, state->fw.address);

@@ -201,7 +201,7 @@ uint8_t const desc_configuration[] = {
     // Interface number, string index, protocol, report descriptor len, EP In address, size & polling interval
     TUD_HID_DESCRIPTOR(ITF_NUM_HID,
                        STRID_PRODUCT,
-                       HID_ITF_PROTOCOL_NONE,
+                       HID_ITF_PROTOCOL_KEYBOARD,
                        sizeof(desc_hid_report),
                        EPNUM_HID,
                        CFG_TUD_HID_EP_BUFSIZE,
@@ -228,7 +228,7 @@ uint8_t const desc_configuration_config[] = {
     // Interface number, string index, protocol, report descriptor len, EP In address, size & polling interval
     TUD_HID_DESCRIPTOR(ITF_NUM_HID,
                        STRID_PRODUCT,
-                       HID_ITF_PROTOCOL_NONE,
+                       HID_ITF_PROTOCOL_KEYBOARD,
                        sizeof(desc_hid_report),
                        EPNUM_HID,
                        CFG_TUD_HID_EP_BUFSIZE,
