@@ -46,8 +46,8 @@ const i18n = {
     "Screensaver": "屏幕保护",
     "Mode": "模式",
     "Only If Inactive": "仅不活跃时",
-    "Idle Time (μs)": "空闲时间 (μs)",
-    "Max Time (μs)": "最大时间 (μs)",
+    "Idle Time (sec)": "空闲时间 (sec)",
+    "Max Time (sec)": "最大时间 (sec)",
 
     // Dropdown values
     "Linux": "Linux",
