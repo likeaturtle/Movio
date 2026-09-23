@@ -42,6 +42,12 @@ int main(void) {
     // Initial state, A is the default output
     set_active_output(device, OUTPUT_A);
 
+    // Start core 1 after hardware and shared state initialization is complete
+    multicore_launch_core1(core1_main);
+
+    // Setup the watchdog so we reboot and recover from a crash
+    watchdog_enable(WATCHDOG_TIMEOUT, WATCHDOG_PAUSE_ON_DEBUG);
+
     while (true) {
         for (int i = 0; i < NUM_TASKS; i++)
             task_scheduler(device, &tasks_core0[i]);
