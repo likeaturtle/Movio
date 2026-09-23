@@ -32,7 +32,7 @@ int32_t get_report_value(uint8_t *report, int len, report_val_t *val) {
     int32_t result = report[byte_offset] >> offset_in_bits;
 
     /* Move to the next byte and continue fetching bits until the desired length is reached */
-    while (val->size > remaining_bits && byte_offset < len) {
+    while (val->size > remaining_bits && byte_offset + 1 < len) {
         result |= report[++byte_offset] << remaining_bits;
         remaining_bits += 8;
     }
@@ -339,11 +339,12 @@ int32_t _extract_kbd_other(uint8_t *raw_report, int len, hid_interface_t *iface,
     if (iface->uses_report_id)
         src++;
 
-    if (kb->modifier.offset_idx >= len)
+    if (kb->modifier.offset_idx >= len - 1)
         return -1;
 
     report->modifier = src[kb->modifier.offset_idx];
-    for (int i=0, j=0; i < MAX_KEYS && j < KEYS_IN_USB_REPORT; i++) {
+
+    for (int i=0, j=0; i < TU_MIN(len - 1, MAX_KEYS) && j < KEYS_IN_USB_REPORT; i++) {
         if(kb->key_array[i])
             report->keycode[j++] = src[i];
     }
