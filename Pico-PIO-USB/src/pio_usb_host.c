@@ -697,7 +697,7 @@ static int __no_inline_not_in_flash_func(control_out_protocol)(
     return -1;
   }
 
-  const uint64_t timeout = 5000 * 1000; // 5s
+  const uint64_t timeout = 350 * 1000; // 350ms
   uint64_t start_time = time_us_64();
   while (pipe->operation == CONTROL_OUT &&
          time_us_64() - start_time < timeout) {
@@ -741,7 +741,7 @@ static int __no_inline_not_in_flash_func(control_in_protocol)(
     return -1;
   }
 
-  const uint64_t timeout = 5000 * 1000; // 5s
+  const uint64_t timeout = 350 * 1000; // 350ms
   uint64_t start_time = time_us_64();
   while (pipe->operation == CONTROL_IN &&
          time_us_64() - start_time < timeout) {
