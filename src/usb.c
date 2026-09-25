@@ -179,6 +179,9 @@ void tuh_hid_umount_cb(uint8_t dev_addr, uint8_t instance) {
     switch (itf_protocol) {
         case HID_ITF_PROTOCOL_KEYBOARD:
             global_state.keyboard_connected = false;
+
+            /* Clear local keyboard state so unplugging doesn't leave keys stuck */
+            memset(&global_state.local_kbd_states, 0, sizeof(global_state.local_kbd_states));
             break;
 
         case HID_ITF_PROTOCOL_MOUSE:
