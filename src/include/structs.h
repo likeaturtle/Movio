@@ -80,7 +80,10 @@ typedef struct {
     uint16_t jump_threshold;
 
     output_t output[NUM_SCREENS];
-    uint32_t _reserved;
+
+    /* If not set to zero (previously reserved), gaming mode should be active by default */
+    uint8_t gaming_mode_default;
+    uint8_t _reserved[3];
 
     // Keep checksum at the end of the struct
     uint32_t checksum;
