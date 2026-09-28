@@ -41,6 +41,13 @@ CONFIG_ = [
     FormField(73, "KBD LED as Indicator", None, {}, "uint8", "checkbox"),
 
     FormField(76, "Enforce Ports", None, {}, "uint8", "checkbox"),
+    FormField(84, "Onboard LED", 0, {
+        0: "Active output",
+        1: "Short idle (1 second)",
+        2: "Long idle (2 minutes)",
+        3: "Status blinks only",
+        4: "Disabled",
+    }, "uint8"),
 ]
 
 OUTPUT_ = [

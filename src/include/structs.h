@@ -83,7 +83,8 @@ typedef struct {
 
     /* If not set to zero (previously reserved), gaming mode should be active by default */
     uint8_t gaming_mode_default;
-    uint8_t _reserved[3];
+    uint8_t led_mode;
+    uint8_t _reserved[2];
 
     // Keep checksum at the end of the struct
     uint32_t checksum;
@@ -183,6 +184,14 @@ enum screensaver_mode_e {
     PONG       = 1,
     JITTER     = 2,
     MAX_SS_VAL = JITTER,
+};
+
+enum led_mode_e {
+    LED_ACTIVE_OUTPUT = 0,
+    LED_SHORT_IDLE    = 1,
+    LED_LONG_IDLE     = 2,
+    LED_STATUS_ONLY   = 3,
+    LED_DISABLED      = 4,
 };
 
 extern const config_t default_config;

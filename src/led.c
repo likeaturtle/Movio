@@ -11,6 +11,9 @@
 
 #include "main.h"
 
+static const uint64_t short_idle_timeout_us = 1000000;
+static const uint64_t long_idle_timeout_us = 120 * short_idle_timeout_us;
+
 /* ==================================================== *
  * ========== Update pico and keyboard LEDs  ========== *
  * ==================================================== */
@@ -31,9 +34,40 @@ void set_keyboard_leds(uint8_t requested_led_state, device_t *state) {
     }
 }
 
+static bool onboard_led_should_be_on(device_t *state) {
+    if (state->active_output != BOARD_ROLE)
+        return false;
+
+    uint64_t inactivity = time_us_64() - state->last_activity[BOARD_ROLE];
+
+    switch (state->config.led_mode) {
+        case LED_SHORT_IDLE:
+            return inactivity < short_idle_timeout_us;
+
+        case LED_LONG_IDLE:
+            return inactivity < long_idle_timeout_us;
+
+        case LED_STATUS_ONLY:
+        case LED_DISABLED:
+            return false;
+
+        case LED_ACTIVE_OUTPUT:
+        default:
+            return true;
+    }
+}
+
+static void update_onboard_led(device_t *state) {
+    bool desired_led_state = onboard_led_should_be_on(state);
+
+    if (state->onboard_led_state != desired_led_state) {
+        state->onboard_led_state = desired_led_state;
+        gpio_put(GPIO_LED_PIN, state->onboard_led_state);
+    }
+}
+
 void restore_leds(device_t *state) {
-    /* Light up on-board LED if current board is active output */
-    state->onboard_led_state = (state->active_output == BOARD_ROLE);
+    state->onboard_led_state = onboard_led_should_be_on(state);
     gpio_put(GPIO_LED_PIN, state->onboard_led_state);
 
     /* Light up appropriate keyboard leds (if it's connected locally) */
@@ -45,7 +79,9 @@ void restore_leds(device_t *state) {
 
 uint8_t toggle_led(void) {
     uint8_t new_led_state = gpio_get(GPIO_LED_PIN) ^ 1;
-    gpio_put(GPIO_LED_PIN, new_led_state);
+
+    if (global_state.config.led_mode != LED_DISABLED)
+        gpio_put(GPIO_LED_PIN, new_led_state);
 
     return new_led_state;
 }
@@ -57,6 +93,8 @@ void blink_led(device_t *state) {
 }
 
 void led_sync_task(device_t *state) {
+    update_onboard_led(state);
+
     /* Check if keyboard LEDs need to be updated */
     if (state->keyboard_connected) {
         uint8_t desired_leds = state->keyboard_leds_desired[state->active_output];
