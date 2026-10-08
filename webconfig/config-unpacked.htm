@@ -1642,9 +1642,33 @@ img {
 
   
   <div class="clearfix">
+    
+<label class="label-inline"><span data-i18n="Gaming Mode Default ON">Gaming Mode Default ON</span></label>
+
+    
+<input class="api" type="checkbox" name="name83" data-type="uint8" data-key="83"
+  onchange="valueChangedHandler(this)"
+  />
+
+  </div>
+
+  
+
+            
+              
+
+
+
+
+
+
+
+
+  
+  <div class="clearfix">
     <form class="range-form">
       
-<label class="label-inline"><span data-i18n="Jump Threshold ">Jump Threshold </span>=</label>
+<label class="label-inline"><span data-i18n="Jump Threshold">Jump Threshold</span>=</label>
 
 
       
@@ -1751,6 +1775,38 @@ img {
   />
 
   </div>
+
+  
+
+            
+              
+
+
+
+
+
+
+
+
+  
+    
+<label class=""><span data-i18n="Onboard LED">Onboard LED</span></label>
+
+    <select class="api" data-type="uint8" data-key="84" required>
+    <option disabled selected value></option>
+
+    
+    <option value="0" data-i18n="Active output">Active output</option>
+    
+    <option value="1" data-i18n="Short idle (1 second)">Short idle (1 second)</option>
+    
+    <option value="2" data-i18n="Long idle (2 minutes)">Long idle (2 minutes)</option>
+    
+    <option value="3" data-i18n="Status blinks only">Status blinks only</option>
+    
+    <option value="4" data-i18n="Disabled">Disabled</option>
+    
+    </select><br />
 
   
 

@@ -237,9 +237,11 @@ void initial_setup(device_t *state) {
     /* Initialize UART queue */
     queue_init(&state->uart_tx_queue, sizeof(uart_packet_t), UART_QUEUE_LENGTH);
 
-    /* Setup RP2040 Core 1 */
+    /* Apply the configured default for gaming mode (relative mode + switching lock) */
+    state->gaming_mode = state->config.gaming_mode_default;
+
+    /* Reset RP2040 Core 1; launch it after all shared state is initialized. */
     multicore_reset_core1();
-    multicore_launch_core1(core1_main);
 
     /* Initialize and configure TinyUSB Device */
     tud_init(BOARD_TUD_RHPORT);
@@ -257,8 +259,6 @@ void initial_setup(device_t *state) {
     /* Update the core1 initial pass timestamp before enabling the watchdog */
     state->core1_last_loop_pass = time_us_32();
 
-    /* Setup the watchdog so we reboot and recover from a crash */
-    watchdog_enable(WATCHDOG_TIMEOUT, WATCHDOG_PAUSE_ON_DEBUG);
 }
 
 /* ==========  End of Initial Board Setup  ========== */

@@ -198,6 +198,11 @@ void handle_output_select_msg(uart_packet_t *packet, device_t *state) {
 
 /* On firmware upgrade message, reboot into the BOOTSEL fw upgrade mode */
 void handle_fw_upgrade_msg(uart_packet_t *packet, device_t *state) {
+    /* Compile-time kill-switch: if cross-device firmware upgrade is disabled,
+       refuse to enter BOOTSEL. Cannot be changed at runtime. */
+    if (DISABLE_FW_UPGRADE)
+        return;
+
     reset_usb_boot(1 << PICO_DEFAULT_LED_PIN, 0);
 }
 
@@ -267,6 +272,10 @@ void handle_reboot_msg(uart_packet_t *packet, device_t *state) {
 
 /* Decapsulate and send to the other box */
 void handle_proxy_msg(uart_packet_t *packet, device_t *state) {
+    /* Block packets from being proxied if config mode isn't active. */
+    if (!state->config_mode_active)
+        return;
+
     queue_packet(&packet->data[1], (enum packet_type_e)packet->data[0], PACKET_DATA_LENGTH - 1);
 }
 
@@ -360,6 +369,10 @@ void handle_response_byte_msg(uart_packet_t *packet, device_t *state) {
 /* Process a request to read a firmware package from flash */
 void handle_heartbeat_msg(uart_packet_t *packet, device_t *state) {
     uint16_t other_running_version = packet->data16[0];
+
+    /* Compile-time kill-switch: never kick off a cross-device firmware copy */
+    if (DISABLE_FW_UPGRADE)
+        return;
 
     if (state->fw.upgrade_in_progress)
         return;

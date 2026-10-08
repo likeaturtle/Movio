@@ -59,18 +59,24 @@ bool tud_msc_is_writable_cb(uint8_t lun) {
 
 /* Simple firmware write routine, we get 512-byte uf2 blocks with 256 byte payload */
 int32_t tud_msc_write10_cb(uint8_t lun, uint32_t lba, uint32_t offset, uint8_t *buffer, uint32_t bufsize) {
-    const uint32_t MAX_BLOCK_NO = (STAGING_IMAGE_SIZE / FLASH_PAGE_SIZE) - 1;
     uf2_t *uf2 = (uf2_t *)&buffer[0];
-
-    bool is_final_block = (uf2->blockNo == MAX_BLOCK_NO);
+    bool is_final_block = (uf2->blockNo == STAGING_PAGES_CNT - 1);
     uint32_t flash_addr = (uint32_t)ADDR_FW_RUNNING + uf2->blockNo * FLASH_PAGE_SIZE - XIP_BASE;
 
     if (lba >= NUMBER_OF_BLOCKS)
         return -1;
 
+    /* Do not parse a partial MSC write as a UF2 block. */
+    if (bufsize < sizeof(uf2_t))
+        return -1;
+
     /* If we're not detecting UF2 magic constants, we have nothing to do... */
     if (uf2->magicStart0 != UF2_MAGIC_START0 || uf2->magicStart1 != UF2_MAGIC_START1 || uf2->magicEnd != UF2_MAGIC_END)
         return (int32_t)bufsize;
+
+    /* Reject malformed blocks before they can write outside the staging slot. */
+    if (uf2->payloadSize != FLASH_PAGE_SIZE || uf2->blockNo >= STAGING_PAGES_CNT)
+        return -1;
 
     if (uf2->blockNo == 0) {
         global_state.fw.checksum = 0xffffffff;

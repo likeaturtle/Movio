@@ -292,11 +292,16 @@ void do_screen_switch(device_t *state, int direction) {
 }
 
 static inline bool extract_value(bool uses_id, int32_t *dst, report_val_t *src, uint8_t *raw_report, int len) {
-    /* If HID Report ID is used, the report is prefixed by the report ID so we have to move by 1 byte */
-    if (uses_id && (*raw_report++ != src->report_id))
+    /* The report must contain at least one payload byte. */
+    if (len <= uses_id)
         return false;
 
-    *dst = get_report_value(raw_report, len, src);
+    /* If the report uses an ID, the first byte must match the expected report ID */
+    if (uses_id && *raw_report != src->report_id)
+        return false;
+
+    /* Extract the value, adjust pointer and length if report ID is used */
+    *dst = get_report_value(raw_report + uses_id, len - uses_id, src);
     return true;
 }
 

@@ -33,13 +33,21 @@ CONFIG_ = [
     FormField(1001, "Mouse", elem="label"),
     FormField(71, "Force Mouse Boot Mode", None, {}, "uint8", "checkbox"),
     FormField(75, "Enable Acceleration", None, {}, "uint8", "checkbox"),
-    FormField(77, "Jump Threshold ", 0, {"min": 0, "max": 3000}, "uint16", "range"),
+    FormField(83, "Gaming Mode Default ON", None, {}, "uint8", "checkbox"),
+    FormField(77, "Jump Threshold", 0, {"min": 0, "max": 3000}, "uint16", "range"),
 
     FormField(1002, "Keyboard", elem="label"),
     FormField(72, "Force KBD Boot Protocol", None, {}, "uint8", "checkbox"),
     FormField(73, "KBD LED as Indicator", None, {}, "uint8", "checkbox"),
 
     FormField(76, "Enforce Ports", None, {}, "uint8", "checkbox"),
+    FormField(84, "Onboard LED", 0, {
+        0: "Active output",
+        1: "Short idle (1 second)",
+        2: "Long idle (2 minutes)",
+        3: "Status blinks only",
+        4: "Disabled",
+    }, "uint8"),
 ]
 
 OUTPUT_ = [

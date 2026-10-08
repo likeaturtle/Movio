@@ -23,6 +23,25 @@
 #define KBD_LED_AS_INDICATOR 0
 
 /**===================================================== *
+ * ==========  Cross-device firmware upgrade  ========== *
+ * ===================================================== *
+ *
+ * DeskHop can copy firmware from one board to the other over the UART link
+ * (e.g. when you flash board A and it propagates the update to board B).
+ *
+ * If you never use this and want to harden the device against a compromised
+ * board triggering the other into BOOTSEL / a firmware copy, set this to 1.
+ * It is a compile-time setting, so it cannot be changed at runtime via a
+ * packet or memory corruption.
+ *
+ * DISABLE_FW_UPGRADE set to 0 keeps cross-device firmware upgrade enabled.
+ * DISABLE_FW_UPGRADE set to 1 disables it entirely.
+ *
+ * */
+
+#define DISABLE_FW_UPGRADE 0
+
+/**===================================================== *
  * ===========  Hotkey for output switching  =========== *
  * ===================================================== *
  *
