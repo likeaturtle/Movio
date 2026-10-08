@@ -34,7 +34,7 @@ CONFIG_ = [
     FormField(71, "Force Mouse Boot Mode", None, {}, "uint8", "checkbox"),
     FormField(75, "Enable Acceleration", None, {}, "uint8", "checkbox"),
     FormField(83, "Gaming Mode Default ON", None, {}, "uint8", "checkbox"),
-    FormField(77, "Jump Threshold", 0, {"min": 0, "max": 3000}, "uint16", "range"),
+    FormField(77, "Jump Threshold ", 0, {"min": 0, "max": 3000}, "uint16", "range"),
 
     FormField(1002, "Keyboard", elem="label"),
     FormField(72, "Force KBD Boot Protocol", None, {}, "uint8", "checkbox"),
