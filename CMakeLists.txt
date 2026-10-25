@@ -128,6 +128,9 @@ target_compile_definitions(${binary}
     PIO_USB_USE_TINYUSB=${PIO_USE_TINYUSB}
     PIO_USB_DP_PIN_DEFAULT=${DP_PIN_DEFAULT}
     __disk_file_path__="${DISK_BIN}"
+    # Lengthen the XOSC startup delay for slow-starting crystals (default is 1).
+    # STARTUP_DELAY = ((XOSC_KHZ + 128) / 256) * multiplier = 47 * 64 = 3008 (~64 ms).
+    PICO_XOSC_STARTUP_DELAY_MULTIPLIER=64
 )
 
 ## Support building a debug version
