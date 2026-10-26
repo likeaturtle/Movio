@@ -13,13 +13,13 @@ Based on the [DeskHop](https://github.com/hrvach/deskhop) project, Movio brings 
 - **No software** to install on either computer
 - **Full galvanic isolation** (2kV) between outputs
 - Works with **Linux, macOS, Windows, and Android**
-- Up to **6 extended screens** per computer
+- Up to **6 screens total** (1–3 per output via the web UI)
 - Affordable components (<15€ total)
 - 3D printable snap-fit case
 - **Chinese/English** bilingual web configuration interface
 - Completely **[free and open source](https://certification.oshwa.org/de000149.html)**
 
-[User Manual (中文)](misc/Movio_Product_Introduction.md) | [Comparison with DeskHop](misc/Movio_vs_DeskHop.md)
+[用户手册（中文）](misc/Movio_User_Manual_zh.md) | [产品介绍（中文）](misc/Movio_Product_Introduction.md) | [Comparison with DeskHop](misc/Movio_vs_DeskHop.md)
 
 ![Open Source Hardware Logo](img/oshw.svg)
 
@@ -100,7 +100,7 @@ See [Movio_vs_DeskHop.md](misc/Movio_vs_DeskHop.md) for the full detailed compar
 
 1. Connect your **mouse** to the USB port with the mouse icon
 2. Connect your **keyboard** to the USB port with the keyboard icon
-3. Connect both computers via **Type-C cables**
+3. Connect both computers with **USB data cables** (Micro-USB on a standard Pico; USB-C on USB-C variants)
 4. The LED will flash when peripherals are detected
 5. Power on both computers — mouse cursor can now cross between screens
 
@@ -109,9 +109,9 @@ See [Movio_vs_DeskHop.md](misc/Movio_vs_DeskHop.md) for the full detailed compar
 ### Initial Firmware Flash (New Builds)
 
 1. Download `movio.uf2` from [Releases](https://github.com/likeaturtle/Movio/releases)
-2. Connect Type-C to the **A port** computer
-3. Copy `movio.uf2` to the "MOVIO" USB drive that appears
-4. Repeat for the **B port**
+2. For each Pico, hold its **BOOTSEL** button while connecting its USB port to the computer
+3. Copy `movio.uf2` to the **"RPI-RP2"** drive that appears
+4. Repeat for the other Pico
 
 ------
 
@@ -194,10 +194,13 @@ If Chromium on Linux doesn't see the device, create:
 ```
 
 ```
+# Normal mode (optional)
 KERNEL=="hidraw*", SUBSYSTEM=="hidraw", ATTRS{idVendor}=="1209", ATTRS{idProduct}=="c000", GROUP="plugdev", MODE="0660"
+# Config mode used by WebHID
+KERNEL=="hidraw*", SUBSYSTEM=="hidraw", ATTRS{idVendor}=="2e8a", ATTRS{idProduct}=="107c", GROUP="plugdev", MODE="0660"
 ```
 
-Make sure your user is in the `plugdev` group.
+Make sure your user is in the `plugdev` group, then reload the rules with `sudo udevadm control --reload-rules && sudo udevadm trigger`.
 
 ------
 
