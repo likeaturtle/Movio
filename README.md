@@ -21,11 +21,12 @@ Movio is a fork of [DeskHop](https://github.com/hrvach/deskhop) with a redesigne
 7. [Web configuration](#7-web-configuration)
 8. [Firmware updates](#8-firmware-updates)
 9. [Build from source](#9-build-from-source)
-10. [Security, privacy and safety](#10-security-privacy-and-safety)
-11. [Known limitations and compatibility](#11-known-limitations-and-compatibility)
-12. [Troubleshooting](#12-troubleshooting)
-13. [FAQ](#13-faq)
-14. [Documentation and license](#14-documentation-and-license)
+10. [Hardware design and PCB files](#10-hardware-design-and-pcb-files)
+11. [Security, privacy and safety](#11-security-privacy-and-safety)
+12. [Known limitations and compatibility](#12-known-limitations-and-compatibility)
+13. [Troubleshooting](#13-troubleshooting)
+14. [FAQ](#14-faq)
+15. [Documentation and license](#15-documentation-and-license)
 
 ---
 
@@ -43,7 +44,8 @@ Movio sits between your keyboard/mouse and two computers. It keeps a USB connect
 | Screens | 1–3 per output, up to 6 in total |
 | Isolation | 2 kV design isolation between outputs via a digital isolator |
 | Configuration | Local WebHID page, Chinese/English, no network access |
-| Firmware | v0.80, UF2 format, two RP2040 boards |
+| Board | Power-isolated 2-layer PCB, 80 mm × 50 mm, two onboard RP2040 chips; design files in [`hardware/`](hardware/) |
+| Firmware | v0.80, UF2 format, two RP2040 chips on one PCB |
 | Software | None on either computer |
 
 ### What Movio does — and does not do
@@ -116,7 +118,7 @@ This section takes you from unboxing to the first screen crossing in about ten m
 ### 5.1 Before you start
 
 - Movio running firmware **v0.80 or newer**. A brand-new board without firmware must be flashed first (see [Method 2](#84-method-2-bootsel-recoveryfirst-flash)).
-- **Two USB data cables** that match the board's A/B device ports (USB-C or Micro-USB, depending on the hardware revision). Charge-only cables cannot establish a USB data connection.
+- **Two USB data cables** that match the board's A/B device ports (USB-C on the power-isolated revision; check your board). Charge-only cables cannot establish a USB data connection.
 - A **USB keyboard and mouse** — wired, or 2.4 GHz wireless with a USB receiver. Bluetooth-only peripherals have no receiver and cannot be used directly.
 - **Two powered computers** that supply USB power. Most desktops and laptops provide USB power even when shut down, but both computers should be running.
 - **Chrome, Chromium or Edge** for configuration. Firefox and Safari do not support the WebHID API used by the config page.
@@ -468,7 +470,7 @@ Movio uses UF2 firmware. Both RP2040 chips are flashed with the **same** `movio.
 |------|-------------|
 | Firmware file | `movio.uf2` — the same file for both RP2040 chips |
 | Current version | v0.80 |
-| Hardware | Two RP2040 chips on one PCB; connector type depends on the board revision |
+| Hardware | Two RP2040 chips on one PCB; the power-isolated revision has USB-A inputs and USB-C outputs |
 | Integrity | CRC32 checksum to detect transfer/write errors; not a cryptographic signature |
 | Configuration | The device restores defaults if the configuration structure version changes; check OS, screen position and screen count after upgrading |
 | Methods | MOVIO virtual drive (recommended), BOOTSEL / RPI-RP2, config-page **Bootloader** |
@@ -615,7 +617,88 @@ Debug builds can enable `-DDH_DEBUG_CDC_FLASH=ON` to trigger bootloader mode ove
 
 ---
 
-## 10. Security, privacy and safety
+## 10. Hardware design and PCB files
+
+The [`hardware/`](hardware/) directory holds the complete design package for the Movio **power-isolated** board (export dated `2026-11-07`). This revision puts both RP2040 microcontrollers on a single 2-layer PCB: the keyboard and mouse use the USB-A input ports on the A and B sides, and the two computers use two USB-C output ports, with no Pico modules.
+
+The board is split into an A half and a B half. Power (`A_VBUS` / `VCC_A` versus `B_VBUS` / `VCC_B`) and ground (`GND_A` / `GND_B`) are independent on each side, and the only part bridging the two halves is a single digital isolator carrying the UART signals. The computers therefore share neither ground nor supply, so signal isolation and power isolation hold at the same time.
+
+### 10.1 Contents
+
+| File | Contents | How to open |
+|------|----------|-------------|
+| [`Altium_Movio 2026-11-07.zip`](hardware/Altium_Movio%202026-11-07.zip) | Altium project: schematic `P1.schdoc`, PCB `PCB1.pcbdoc`, project `Board1.PrjPcb` | Unzip and open `Board1.PrjPcb` in Altium Designer |
+| [`ProPrj_Movio 2026-11-07.epro2`](hardware/ProPrj_Movio%202026-11-07.epro2) | EasyEDA Pro project with schematic, PCB and 3D previews | EasyEDA Pro 4.1.78 or newer |
+| [`Gerber_PCB1_2026-11-07.zip`](hardware/Gerber_PCB1_2026-11-07.zip) | Fabrication bundle: Gerber, drill files, flying-probe test data and ordering notes | No editing needed; upload to a fab house or open in a Gerber viewer |
+
+> The `2026-11-07` suffix is the export date and identifies the snapshot. Edit the `.epro2` or Altium project and re-export when changing the design; the Gerber bundle is production output and should not be edited by hand.
+
+### 10.2 Board specification
+
+| Item | Detail |
+|------|--------|
+| Board | Movio power-isolated edition |
+| Size and process | 80 mm × 50 mm, 2-layer FR4, 1.6 mm thick, 1 oz copper |
+| MCUs | 2 × RP2040 (QFN-56, soldered on board) |
+| Storage | 2 × W25Q16JVSSIQ, 2 MB QSPI flash |
+| Clock | 2 × 12 MHz crystals (XC32M4-12.000, 20 pF load capacitors) |
+| Power | One ME6211C33M5G 3.3 V LDO per side, producing `VCC_A` / `VCC_B` |
+| Isolation | 1 × ADuM1201ARZ digital isolator across the UART link; `GND_A` and `GND_B` are not connected |
+| Inputs | 2 × USB-A receptacles (USB-234-BCW), one per side, for keyboard and mouse |
+| Outputs | 2 × USB-C 16-pin receptacles for computers A and B |
+| ESD protection | 4 × USBLC6-2SC6 USB ESD arrays covering every USB data pair |
+| USB support | Series termination resistors on the data lines and 4 × 5.1 kΩ CC pull-downs on the USB-C side |
+| Indicators and buttons | 4 × onboard LEDs; 2 × tactile switches (SW1 / SW2, one BOOTSEL button per side) |
+
+The part numbers above are taken directly from the schematic. When changing the design, also check the pin assignment in [`src/include/pinout.h`](src/include/pinout.h) so that firmware and hardware stay in sync.
+
+### 10.3 Fabrication (Gerber)
+
+`Gerber_PCB1_2026-11-07.zip` can be uploaded to a PCB fab house as is; the bundle already contains the board outline and all drill files.
+
+| File | Purpose |
+|------|---------|
+| `Gerber_TopLayer.GTL` / `Gerber_BottomLayer.GBL` | Top / bottom copper |
+| `Gerber_TopSilkscreenLayer.GTO` / `Gerber_BottomSilkscreenLayer.GBO` | Top / bottom silkscreen |
+| `Gerber_TopSolderMaskLayer.GTS` / `Gerber_BottomSolderMaskLayer.GBS` | Top / bottom solder mask |
+| `Gerber_TopPasteMaskLayer.GTP` | Top paste mask (stencil) |
+| `Gerber_BoardOutlineLayer.GKO` | Board outline and cutouts |
+| `Gerber_DrillDrawingLayer.GDD` / `Gerber_DocumentLayer.GDL` | Drill drawing / document layer |
+| `Drill_PTH_Through.DRL` | Plated holes: 0.3 / 0.6 / 1.0 / 2.0 mm |
+| `Drill_NPTH_Through.DRL` | Non-plated holes: 0.65 / 1.5 mm |
+| `Drill_PTH_Through_Via.DRL` | Vias: 0.3 mm |
+| `FlyingProbeTesting.json` | Flying-probe test data for the fab house |
+| `PCB下单必读.txt` | Ordering notes linking to the LCEDA PCB ordering guide |
+
+Order with these parameters:
+
+- **2** layers, **1.6 mm** board thickness, **1 oz** copper, 80 mm × 50 mm outline.
+- Pick the surface finish you need; lead-free HASL is sufficient for hand or reflow soldering.
+- The bundle contains no BOM or pick-and-place file; export both from the `.epro2` or Altium project if you want SMT assembly.
+- Follow `PCB下单必读.txt` in the bundle, or the [LCEDA PCB ordering guide](https://prodocs.lceda.cn/cn/pcb/order-order-pcb/index.html).
+
+### 10.4 Opening and editing the design
+
+- **Altium** — unzip `Altium_Movio 2026-11-07.zip`, open the `Movio 电源隔离版/` folder and load `Board1.PrjPcb` in Altium Designer to get the schematic and PCB together. The project was exported from EasyEDA Pro, so a few footprints or design rules may differ from the original; for large changes go back to the `.epro2`.
+- **EasyEDA Pro** — open `ProPrj_Movio 2026-11-07.epro2` with version 4.1.78 or newer. It contains the schematic, PCB and 3D previews and is the original source of the design.
+- **Gerber only** — use the fab house's online preview, [tracespace](https://tracespace.io/view/), the KiCad Gerber viewer or Gerbv; no commercial software is required.
+
+The usual edit cycle is: change the schematic → update the PCB → run DRC → re-export Gerber (including drill files) → update the parameters in this section. When you submit a change, update both READMEs so the documentation matches the design.
+
+### 10.5 Assembly and first power-up
+
+- **Soldering** — the RP2040 is a QFN-56 package and the USB receptacles and 0603 passives are all SMD, so use reflow or a hot-air station with magnification; an iron alone cannot reliably reach the QFN thermal pad.
+- **Preserve the isolation** — never bridge `GND_A` to `GND_B` or `VCC_A` to `VCC_B`, and never feed both sides from a single supply; doing so defeats the digital isolator.
+- **Check before powering** — measure `VCC_A` and `VCC_B` against their own grounds for shorts before the first power-up. After power-up, check the LEDs first, then connect peripherals and computers.
+- **Flash the firmware** — a blank RP2040 has no firmware. Use the BOOTSEL button for each side and flash the same `movio.uf2` to both, as described in [8.4](#84-method-2-bootsel-recoveryfirst-flash).
+- **ESD and heat** — discharge static before handling a bare board; ventilate when soldering or reworking and avoid burns.
+
+> **Note**
+> The electrical parameters in this section come from the design files in `hardware/`; your board follows the PCB revision you actually received. The 2 kV figure is a signal-side design parameter, not a mains safety isolation rating.
+
+---
+
+## 11. Security, privacy and safety
 
 Movio is designed with security as a basic principle, but it is a keyboard/mouse switch, not a security boundary device.
 
@@ -647,9 +730,9 @@ Movio is powered entirely from the two computers' USB ports; it has no independe
 
 ---
 
-## 11. Known limitations and compatibility
+## 12. Known limitations and compatibility
 
-### 11.1 Limitations
+### 12.1 Limitations
 
 | Limitation | Description |
 |------------|-------------|
@@ -664,7 +747,7 @@ Movio is powered entirely from the two computers' USB ports; it has no independe
 | Hotkeys are not web-configurable | Change them in the source and rebuild the firmware. |
 | CRC32 is not a signature | Firmware integrity uses CRC32; download only from trusted sources. |
 
-### 11.2 Compatibility notes
+### 12.2 Compatibility notes
 
 Movio uses standard USB HID and normally needs no driver. Multi-monitor behavior, system locking and boot-time behavior depend on the OS, motherboard and patch level.
 
@@ -686,11 +769,11 @@ Other systems (iOS/iPadOS, ChromeOS, etc.) are untested and not recommended as p
 
 ---
 
-## 12. Troubleshooting
+## 13. Troubleshooting
 
 Work through the list in this order: **power and cables → device detection → switching configuration → config page → firmware → OS compatibility → hardware**. Change only one variable at a time.
 
-### 12.1 Device and switching
+### 13.1 Device and switching
 
 | Symptom | Possible cause | Fix |
 |---------|----------------|-----|
@@ -705,7 +788,7 @@ Work through the list in this order: **power and cables → device detection →
 | Key appears stuck | Key was held during a switch, or a keyboard/firmware issue | Switch output again; replug the keyboard; update the firmware. |
 | Multi-screen switching is wrong | Screen count/position incorrect or OS compatibility issue | Test with 1 screen, then add screens one at a time; make sure the main screen is adjacent to the other computer. |
 
-### 12.2 Configuration page
+### 13.2 Configuration page
 
 | Symptom | Possible cause | Fix |
 |---------|----------------|-----|
@@ -719,7 +802,7 @@ Work through the list in this order: **power and cables → device detection →
 
 If the config page disconnects on its own, it is usually the 5-minute inactivity timeout. Re-enter configuration mode; the configuration itself is preserved unless you changed values without saving.
 
-### 12.3 Firmware upgrade
+### 13.3 Firmware upgrade
 
 | Symptom | Possible cause | Fix |
 |---------|----------------|-----|
@@ -731,12 +814,12 @@ If the config page disconnects on its own, it is usually the 5-minute inactivity
 | RPI-RP2 does not appear | BOOTSEL not held, cable problem, bad USB port | Hold BOOTSEL while plugging in; try another data cable and port. |
 | Peripherals misbehave after upgrading | Configuration mismatch, firmware not synchronized, compatibility issue | Check the configuration; confirm both boards run the same version; roll back if necessary. |
 
-### 12.4 Before reporting an issue
+### 13.4 Before reporting an issue
 
 Include the following so the problem can be reproduced:
 
 - Firmware version and checksum (config page **Device Status**)
-- Hardware revision (PCB revision, USB connector type)
+- Hardware revision (PCB revision, export date from `hardware/`, USB connector type)
 - Operating systems and versions of both computers
 - Keyboard and mouse brands/models
 - Connection method (direct, hub, dock)
@@ -748,7 +831,7 @@ If the issue is a security vulnerability, do not disclose details in a public is
 
 ---
 
-## 13. FAQ
+## 14. FAQ
 
 **Q: Can I use just two Picos without a PCB or isolator?**
 A: Yes, though the digital isolator is recommended for proper electrical isolation.
@@ -800,7 +883,7 @@ A: No. It provides signal isolation and no data channel, but it is not a certifi
 
 ---
 
-## 14. Documentation and license
+## 15. Documentation and license
 
 ### Documentation
 
@@ -809,6 +892,7 @@ A: No. It provides signal isolation and no data channel, but it is not a certifi
 | [Movio product manual (DOCX)](Movio_产品说明书.docx) | Official Chinese manual; authoritative source for this README (v0.80, V1.0, 2026-10). |
 | [Chinese user manual](misc/Movio_User_Manual_zh.md) | Markdown user manual covering setup, configuration and troubleshooting. |
 | [Product introduction](misc/Movio_Product_Introduction.md) | Chinese overview of the product, hardware and design. |
+| [PCB design files](hardware/) | Schematic, PCB and Gerber bundle for the power-isolated board; see [Section 10](#10-hardware-design-and-pcb-files). |
 | [Movio vs DeskHop](misc/Movio_vs_DeskHop.md) | Detailed comparison with the upstream project. |
 
 ### Project links
