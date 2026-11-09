@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<title>06_接线</title>
+<style>* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 750px; }
+body {
+  font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  color: #15171C;
+  background: #FAF7F2;
+}
+.screen { position: relative; width: 750px; overflow: hidden; background: #FAF7F2; }
+.screen.dark { background: #14161A; color: #F5F2EC; }
+.screen.cream { background: #F2EBE1; }
+.screen.dark::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(680px 420px at 88% 6%, rgba(255,106,0,.20), transparent 62%);
+}
+.pad { padding-left: 56px; padding-right: 56px; }
+.rel { position: relative; z-index: 2; }
+
+/* ---------- top nav ---------- */
+.nav { display: flex; align-items: center; justify-content: space-between; }
+.wordmark {
+  font-family: "Avenir Next", "Helvetica Neue", sans-serif;
+  font-size: 23px; font-weight: 600; letter-spacing: .3em;
+}
+.nav .meta {
+  font-family: "Avenir Next", sans-serif;
+  font-size: 16px; letter-spacing: .16em; color: #9A938A; text-transform: uppercase;
+}
+.dark .nav .meta { color: #7F858E; }
+
+/* ---------- type ---------- */
+.kicker {
+  display: flex; align-items: center; gap: 13px;
+  font-size: 19px; font-weight: 600; letter-spacing: .16em; color: #FF6A00;
+  font-family: "PingFang SC", sans-serif;
+}
+.kicker::before { content: ""; width: 28px; height: 2px; background: #FF6A00; }
+h2 {
+  font-size: 47px; line-height: 1.32; font-weight: 600; letter-spacing: -.6px;
+}
+h2 .accent { color: #FF6A00; }
+h2 .thin { font-weight: 300; }
+.lead { font-size: 24px; line-height: 1.9; color: #565D66; font-weight: 400; }
+.dark .lead { color: #A6ABB4; }
+.small { font-size: 19px; line-height: 1.8; color: #8A8F97; }
+.dark .small { color: #737982; }
+.hr { height: 1px; background: #E6DED2; }
+.dark .hr { background: #2A2D33; }
+.num { font-family: "Avenir Next", sans-serif; font-variant-numeric: tabular-nums; }
+
+/* ---------- components ---------- */
+.card {
+  background: #FFFFFF; border: 1px solid #E9E1D5; border-radius: 18px;
+}
+.dark .card { background: #1B1E23; border-color: #2C3037; }
+.tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  height: 44px; padding: 0 18px; border-radius: 22px;
+  font-size: 19px; color: #4A5058; background: #FFFFFF; border: 1px solid #E5DCCF;
+}
+.dark .tag { background: rgba(255,255,255,.05); border-color: rgba(255,255,255,.12); color: #CFD3D9; }
+
+.kbd {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 54px; height: 54px; padding: 0 14px; border-radius: 10px;
+  background: #FFFFFF; border: 1px solid #DCD3C6;
+  box-shadow: 0 3px 0 #DCD3C6;
+  font-size: 22px; font-weight: 500; color: #33383F; white-space: nowrap;
+}
+.kbd.sm { min-width: 46px; height: 46px; padding: 0 11px; font-size: 19px; border-radius: 9px; }
+.dark .kbd { background: #23262C; border-color: #383C44; box-shadow: 0 3px 0 #383C44; color: #F1EEE8; }
+.plus { font-size: 19px; color: #A8ADB4; margin: 0 2px; font-family: "Avenir Next", sans-serif; }
+.keyrow { display: flex; align-items: center; gap: 6px; }
+
+.dot { width: 7px; height: 7px; border-radius: 50%; background: #FF6A00; display: inline-block; }
+
+/* photo frame */
+.photo { border-radius: 20px; overflow: hidden; position: relative; background: #EDE4D8; }
+.photo img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.caption { margin-top: 14px; font-size: 18px; color: #938B80; letter-spacing: .02em; }
+.dark .caption { color: #767C85; }
+
+/* table */
+.rows { border-top: 1px solid #E6DED2; }
+.dark .rows { border-top-color: #2A2D33; }
+.row { display: flex; align-items: center; border-bottom: 1px solid #E6DED2; }
+.dark .row { border-bottom-color: #2A2D33; }
+</style>
+<style></style>
+</head><body><div class="screen " style="height:1200px">
+<div class="pad rel" style="padding-top:44px">
+  <div class="nav">
+    <div class="wordmark">MOVIO</div>
+    <div class="meta">SEAMLESS KVM · 双机键鼠切换器</div>
+  </div>
+</div>
+<div class="pad rel" style="margin-top:56px">
+  <div class="kicker">05 — 接线</div>
+  <h2 style="margin-top:22px;">四根线，<br>十分钟完成第一次穿屏。</h2><p class="lead" style="margin-top:24px">两根 USB-C 数据线接电脑，键盘和鼠标接两个 USB-A 口。方向只有一个：键鼠进，电脑出。</p></div>
+<div class="pad rel" style="margin-top:34px;display:grid;grid-template-columns:1fr 1fr;gap:16px">
+  <div class="card" style="padding:24px 24px 22px">
+    <div class="num" style="font-size:17px;color:#FF6A00;letter-spacing:.14em">01</div>
+    <div style="font-size:24px;font-weight:600;margin-top:8px">连接键盘</div>
+    <div style="font-size:20px;line-height:1.65;color:#5C636B;margin-top:8px">插入带键盘图标的 USB-A 口；无线键盘把接收器插在这里。</div>
+  </div>
+  <div class="card" style="padding:24px 24px 22px">
+    <div class="num" style="font-size:17px;color:#FF6A00;letter-spacing:.14em">02</div>
+    <div style="font-size:24px;font-weight:600;margin-top:8px">连接鼠标</div>
+    <div style="font-size:20px;line-height:1.65;color:#5C636B;margin-top:8px">插入带鼠标图标的 USB-A 口；键鼠合一接收器插任一口通常都可以。</div>
+  </div>
+  <div class="card" style="padding:24px 24px 22px">
+    <div class="num" style="font-size:17px;color:#FF6A00;letter-spacing:.14em">03</div>
+    <div style="font-size:24px;font-weight:600;margin-top:8px">A 端 → 电脑 A</div>
+    <div style="font-size:20px;line-height:1.65;color:#5C636B;margin-top:8px">用一根 USB-C 数据线连接 A 端与电脑 A 的 USB 口。</div>
+  </div>
+  <div class="card" style="padding:24px 24px 22px">
+    <div class="num" style="font-size:17px;color:#FF6A00;letter-spacing:.14em">04</div>
+    <div style="font-size:24px;font-weight:600;margin-top:8px">B 端 → 电脑 B</div>
+    <div style="font-size:20px;line-height:1.65;color:#5C636B;margin-top:8px">用另一根 USB-C 数据线连接 B 端与电脑 B 的 USB 口。</div>
+  </div>
+</div>
+<div class="pad rel" style="margin-top:24px">
+  <div style="border-left:3px solid #FF6A00;padding-left:20px">
+    <p style="font-size:20px;line-height:1.8;color:#565D66">
+      两根线都必须支持数据传输——仅充电线无法建立 USB 连接；A / B 两路分别由对应电脑供电，<span style="color:#15171C;font-weight:600">两台电脑都要开机</span>。
+    </p>
+  </div>
+</div>
+<div class="pad rel" style="margin-top:30px">
+  <div style="display:flex;align-items:center;justify-content:space-between">
+    <div style="width:164px">
+      <div style="height:46px;border:1px solid #E5DCCF;background:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;color:#4E545C">键盘 · USB-A</div>
+      <div style="height:46px;border:1px solid #E5DCCF;background:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;color:#4E545C;margin-top:10px">鼠标 · USB-A</div>
+    </div>
+    <div style="width:38px;text-align:center;color:#FF6A00;font-size:20px">→</div>
+    <div style="width:184px;height:120px;border:2px solid #FF6A00;border-radius:14px;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px">
+      <div style="font-family:'Avenir Next';font-size:17px;letter-spacing:.24em;color:#15171C">MOVIO</div>
+      <div style="font-size:15px;color:#8A8F97">双机键鼠切换</div>
+    </div>
+    <div style="width:38px;text-align:center;color:#FF6A00;font-size:20px">→</div>
+    <div style="width:164px">
+      <div style="height:46px;border:1px solid #E5DCCF;background:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;color:#4E545C">电脑 A · A 端</div>
+      <div style="height:46px;border:1px solid #E5DCCF;background:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;color:#4E545C;margin-top:10px">电脑 B · B 端</div>
+    </div>
+  </div>
+  <div class="caption" style="text-align:center">键鼠进，电脑出：USB-A 是主机输入口，A / B 端是设备输出口。</div>
+</div>
+</div></body></html>

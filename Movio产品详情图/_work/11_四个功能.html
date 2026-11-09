@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<title>11_四个功能</title>
+<style>* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 750px; }
+body {
+  font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  color: #15171C;
+  background: #FAF7F2;
+}
+.screen { position: relative; width: 750px; overflow: hidden; background: #FAF7F2; }
+.screen.dark { background: #14161A; color: #F5F2EC; }
+.screen.cream { background: #F2EBE1; }
+.screen.dark::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(680px 420px at 88% 6%, rgba(255,106,0,.20), transparent 62%);
+}
+.pad { padding-left: 56px; padding-right: 56px; }
+.rel { position: relative; z-index: 2; }
+
+/* ---------- top nav ---------- */
+.nav { display: flex; align-items: center; justify-content: space-between; }
+.wordmark {
+  font-family: "Avenir Next", "Helvetica Neue", sans-serif;
+  font-size: 23px; font-weight: 600; letter-spacing: .3em;
+}
+.nav .meta {
+  font-family: "Avenir Next", sans-serif;
+  font-size: 16px; letter-spacing: .16em; color: #9A938A; text-transform: uppercase;
+}
+.dark .nav .meta { color: #7F858E; }
+
+/* ---------- type ---------- */
+.kicker {
+  display: flex; align-items: center; gap: 13px;
+  font-size: 19px; font-weight: 600; letter-spacing: .16em; color: #FF6A00;
+  font-family: "PingFang SC", sans-serif;
+}
+.kicker::before { content: ""; width: 28px; height: 2px; background: #FF6A00; }
+h2 {
+  font-size: 47px; line-height: 1.32; font-weight: 600; letter-spacing: -.6px;
+}
+h2 .accent { color: #FF6A00; }
+h2 .thin { font-weight: 300; }
+.lead { font-size: 24px; line-height: 1.9; color: #565D66; font-weight: 400; }
+.dark .lead { color: #A6ABB4; }
+.small { font-size: 19px; line-height: 1.8; color: #8A8F97; }
+.dark .small { color: #737982; }
+.hr { height: 1px; background: #E6DED2; }
+.dark .hr { background: #2A2D33; }
+.num { font-family: "Avenir Next", sans-serif; font-variant-numeric: tabular-nums; }
+
+/* ---------- components ---------- */
+.card {
+  background: #FFFFFF; border: 1px solid #E9E1D5; border-radius: 18px;
+}
+.dark .card { background: #1B1E23; border-color: #2C3037; }
+.tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  height: 44px; padding: 0 18px; border-radius: 22px;
+  font-size: 19px; color: #4A5058; background: #FFFFFF; border: 1px solid #E5DCCF;
+}
+.dark .tag { background: rgba(255,255,255,.05); border-color: rgba(255,255,255,.12); color: #CFD3D9; }
+
+.kbd {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 54px; height: 54px; padding: 0 14px; border-radius: 10px;
+  background: #FFFFFF; border: 1px solid #DCD3C6;
+  box-shadow: 0 3px 0 #DCD3C6;
+  font-size: 22px; font-weight: 500; color: #33383F; white-space: nowrap;
+}
+.kbd.sm { min-width: 46px; height: 46px; padding: 0 11px; font-size: 19px; border-radius: 9px; }
+.dark .kbd { background: #23262C; border-color: #383C44; box-shadow: 0 3px 0 #383C44; color: #F1EEE8; }
+.plus { font-size: 19px; color: #A8ADB4; margin: 0 2px; font-family: "Avenir Next", sans-serif; }
+.keyrow { display: flex; align-items: center; gap: 6px; }
+
+.dot { width: 7px; height: 7px; border-radius: 50%; background: #FF6A00; display: inline-block; }
+
+/* photo frame */
+.photo { border-radius: 20px; overflow: hidden; position: relative; background: #EDE4D8; }
+.photo img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.caption { margin-top: 14px; font-size: 18px; color: #938B80; letter-spacing: .02em; }
+.dark .caption { color: #767C85; }
+
+/* table */
+.rows { border-top: 1px solid #E6DED2; }
+.dark .rows { border-top-color: #2A2D33; }
+.row { display: flex; align-items: center; border-bottom: 1px solid #E6DED2; }
+.dark .row { border-bottom-color: #2A2D33; }
+</style>
+<style></style>
+</head><body><div class="screen " style="height:1160px">
+<div class="pad rel" style="padding-top:44px">
+  <div class="nav">
+    <div class="wordmark">MOVIO</div>
+    <div class="meta">SEAMLESS KVM · 双机键鼠切换器</div>
+  </div>
+</div>
+<div class="pad rel" style="margin-top:56px">
+  <div class="kicker">11 — 日常功能</div>
+  <h2 style="margin-top:22px;">四个不显眼，<br>但每天都会用到的功能。</h2><p class="lead" style="margin-top:24px">它们都不需要额外软件，用快捷键就能随时开关。</p></div>
+<div class="pad rel" style="margin-top:38px;display:grid;grid-template-columns:1fr 1fr;gap:16px">
+  <div class="card" style="padding:24px">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div style="font-size:23px;font-weight:600">游戏模式</div>
+      <div style="font-size:14px;color:#FF6A00;letter-spacing:.1em">GAME</div>
+    </div>
+    <div style="margin-top:12px"><div class="keyrow"><span class="kbd sm">左 Ctrl</span><span class="plus">+</span><span class="kbd sm">右 Shift</span><span class="plus">+</span><span class="kbd sm">G</span></div></div>
+    <p style="font-size:19px;line-height:1.7;color:#5C636B;margin-top:12px">鼠标切为相对模式，到边缘不再穿屏；适合游戏、虚拟机、远程桌面。</p>
+  </div>
+  <div class="card" style="padding:24px">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div style="font-size:23px;font-weight:600">慢速鼠标</div>
+      <div style="font-size:14px;color:#FF6A00;letter-spacing:.1em">PRECISE</div>
+    </div>
+    <div style="margin-top:12px"><div class="keyrow"><span class="kbd sm">右 Ctrl</span><span class="plus">+</span><span class="kbd sm">右 Alt</span></div></div>
+    <p style="font-size:19px;line-height:1.7;color:#5C636B;margin-top:12px">速度约为原来的 1/4，适合精确拖动时间轴、修图、绘图。</p>
+  </div>
+  <div class="card" style="padding:24px">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div style="font-size:23px;font-weight:600">切换锁定</div>
+      <div style="font-size:14px;color:#FF6A00;letter-spacing:.1em">HOLD</div>
+    </div>
+    <div style="margin-top:12px"><div class="keyrow"><span class="kbd sm">右 Ctrl</span><span class="plus">+</span><span class="kbd sm">K</span></div></div>
+    <p style="font-size:19px;line-height:1.7;color:#5C636B;margin-top:12px">临时禁止穿屏与快捷键切换，专注一台电脑；重启后失效。</p>
+  </div>
+  <div class="card" style="padding:24px">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div style="font-size:23px;font-weight:600">屏幕保护</div>
+      <div style="font-size:14px;color:#FF6A00;letter-spacing:.1em">AWAKE</div>
+    </div>
+    <div style="margin-top:12px"><div class="keyrow"><span class="kbd sm">左 Ctrl</span><span class="plus">+</span><span class="kbd sm">右 Shift</span><span class="plus">+</span><span class="kbd sm">S</span></div></div>
+    <p style="font-size:19px;line-height:1.7;color:#5C636B;margin-top:12px">发送极小的鼠标移动，防止休眠与锁屏；不点击、不按键。</p>
+  </div>
+</div>
+<div class="pad rel" style="margin-top:26px">
+  <div style="background:#fff;border:1px dashed #DED3C3;border-radius:14px;padding:20px 24px">
+    <div style="font-size:15px;color:#FF6A00;letter-spacing:.12em;font-weight:600">屏幕保护还有三种模式</div>
+    <div style="font-size:19px;line-height:1.7;color:#5C636B;margin-top:8px">弹球 <b style="font-weight:500;color:#15171C">左 Ctrl + 右 Shift + S</b>　·　抖动 <b style="font-weight:500;color:#15171C">+ J</b>　·　关闭 <b style="font-weight:500;color:#15171C">+ X</b>，只对当前输出生效，不写入 Flash。</div>
+  </div>
+</div>
+</div></body></html>

@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<title>04_不是视频KVM</title>
+<style>* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 750px; }
+body {
+  font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  color: #15171C;
+  background: #FAF7F2;
+}
+.screen { position: relative; width: 750px; overflow: hidden; background: #FAF7F2; }
+.screen.dark { background: #14161A; color: #F5F2EC; }
+.screen.cream { background: #F2EBE1; }
+.screen.dark::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(680px 420px at 88% 6%, rgba(255,106,0,.20), transparent 62%);
+}
+.pad { padding-left: 56px; padding-right: 56px; }
+.rel { position: relative; z-index: 2; }
+
+/* ---------- top nav ---------- */
+.nav { display: flex; align-items: center; justify-content: space-between; }
+.wordmark {
+  font-family: "Avenir Next", "Helvetica Neue", sans-serif;
+  font-size: 23px; font-weight: 600; letter-spacing: .3em;
+}
+.nav .meta {
+  font-family: "Avenir Next", sans-serif;
+  font-size: 16px; letter-spacing: .16em; color: #9A938A; text-transform: uppercase;
+}
+.dark .nav .meta { color: #7F858E; }
+
+/* ---------- type ---------- */
+.kicker {
+  display: flex; align-items: center; gap: 13px;
+  font-size: 19px; font-weight: 600; letter-spacing: .16em; color: #FF6A00;
+  font-family: "PingFang SC", sans-serif;
+}
+.kicker::before { content: ""; width: 28px; height: 2px; background: #FF6A00; }
+h2 {
+  font-size: 47px; line-height: 1.32; font-weight: 600; letter-spacing: -.6px;
+}
+h2 .accent { color: #FF6A00; }
+h2 .thin { font-weight: 300; }
+.lead { font-size: 24px; line-height: 1.9; color: #565D66; font-weight: 400; }
+.dark .lead { color: #A6ABB4; }
+.small { font-size: 19px; line-height: 1.8; color: #8A8F97; }
+.dark .small { color: #737982; }
+.hr { height: 1px; background: #E6DED2; }
+.dark .hr { background: #2A2D33; }
+.num { font-family: "Avenir Next", sans-serif; font-variant-numeric: tabular-nums; }
+
+/* ---------- components ---------- */
+.card {
+  background: #FFFFFF; border: 1px solid #E9E1D5; border-radius: 18px;
+}
+.dark .card { background: #1B1E23; border-color: #2C3037; }
+.tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  height: 44px; padding: 0 18px; border-radius: 22px;
+  font-size: 19px; color: #4A5058; background: #FFFFFF; border: 1px solid #E5DCCF;
+}
+.dark .tag { background: rgba(255,255,255,.05); border-color: rgba(255,255,255,.12); color: #CFD3D9; }
+
+.kbd {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 54px; height: 54px; padding: 0 14px; border-radius: 10px;
+  background: #FFFFFF; border: 1px solid #DCD3C6;
+  box-shadow: 0 3px 0 #DCD3C6;
+  font-size: 22px; font-weight: 500; color: #33383F; white-space: nowrap;
+}
+.kbd.sm { min-width: 46px; height: 46px; padding: 0 11px; font-size: 19px; border-radius: 9px; }
+.dark .kbd { background: #23262C; border-color: #383C44; box-shadow: 0 3px 0 #383C44; color: #F1EEE8; }
+.plus { font-size: 19px; color: #A8ADB4; margin: 0 2px; font-family: "Avenir Next", sans-serif; }
+.keyrow { display: flex; align-items: center; gap: 6px; }
+
+.dot { width: 7px; height: 7px; border-radius: 50%; background: #FF6A00; display: inline-block; }
+
+/* photo frame */
+.photo { border-radius: 20px; overflow: hidden; position: relative; background: #EDE4D8; }
+.photo img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.caption { margin-top: 14px; font-size: 18px; color: #938B80; letter-spacing: .02em; }
+.dark .caption { color: #767C85; }
+
+/* table */
+.rows { border-top: 1px solid #E6DED2; }
+.dark .rows { border-top-color: #2A2D33; }
+.row { display: flex; align-items: center; border-bottom: 1px solid #E6DED2; }
+.dark .row { border-bottom-color: #2A2D33; }
+</style>
+<style></style>
+</head><body><div class="screen " style="height:860px">
+<div class="pad rel" style="padding-top:44px">
+  <div class="nav">
+    <div class="wordmark">MOVIO</div>
+    <div class="meta">SEAMLESS KVM · 双机键鼠切换器</div>
+  </div>
+</div>
+<div class="pad rel" style="margin-top:56px">
+  <div class="kicker">03 — 产品边界</div>
+  <h2 style="margin-top:22px;">它不是视频 KVM。</h2><p class="lead" style="margin-top:24px">显示器、音箱、摄像头、移动硬盘，仍然直连各自的电脑。Movio 只负责键盘和鼠标。</p></div>
+<div class="pad rel" style="margin-top:42px;display:flex;gap:20px">
+  <div style="width:308px;background:#fff;border:1px solid #E5DCCF;border-radius:18px;padding:26px">
+    <div style="display:flex;align-items:center;gap:10px;font-size:19px;font-weight:600;color:#8A8F97;letter-spacing:.06em">
+      <span style="width:26px;height:26px;border-radius:50%;background:#EFE9E0;color:#9C9488;display:inline-flex;align-items:center;justify-content:center;font-size:16px">✕</span>不经过 Movio
+    </div>
+    <div style="margin-top:18px;font-size:22px;line-height:1.5;color:#5C636B">
+      <div style="padding:12px 0;border-top:1px solid #EFE8DD">视频 / 画面</div>
+      <div style="padding:12px 0;border-top:1px solid #EFE8DD">音频</div>
+      <div style="padding:12px 0;border-top:1px solid #EFE8DD">USB 存储、摄像头</div>
+    </div>
+  </div>
+  <div style="width:308px;background:#fff;border:1px solid #FFD6B8;border-radius:18px;padding:26px">
+    <div style="display:flex;align-items:center;gap:10px;font-size:19px;font-weight:600;color:#FF6A00;letter-spacing:.06em">
+      <span style="width:26px;height:26px;border-radius:50%;background:#FF6A00;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:15px">✓</span>由 Movio 切换
+    </div>
+    <div style="margin-top:18px;font-size:22px;line-height:1.5;color:#2C3138">
+      <div style="padding:12px 0;border-top:1px solid #F4E9DE">键盘输入</div>
+      <div style="padding:12px 0;border-top:1px solid #F4E9DE">鼠标输入</div>
+      <div style="padding:12px 0;border-top:1px solid #F4E9DE">跨机切换与快捷键</div>
+    </div>
+  </div>
+</div>
+<div class="rel" style="margin:30px 56px 0;background:#F6EDE2;border-radius:16px;padding:26px 28px">
+  <p style="font-size:22px;line-height:1.8;color:#4C525A">
+    画面不经过 Movio，因此<span style="color:#15171C;font-weight:600">不影响分辨率、刷新率、HDR 与色彩</span>；两台电脑的显示器各接各的，音视频互不干扰。
+  </p>
+</div>
+</div></body></html>

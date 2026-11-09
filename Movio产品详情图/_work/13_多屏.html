@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<title>13_多屏</title>
+<style>* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 750px; }
+body {
+  font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  color: #15171C;
+  background: #FAF7F2;
+}
+.screen { position: relative; width: 750px; overflow: hidden; background: #FAF7F2; }
+.screen.dark { background: #14161A; color: #F5F2EC; }
+.screen.cream { background: #F2EBE1; }
+.screen.dark::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(680px 420px at 88% 6%, rgba(255,106,0,.20), transparent 62%);
+}
+.pad { padding-left: 56px; padding-right: 56px; }
+.rel { position: relative; z-index: 2; }
+
+/* ---------- top nav ---------- */
+.nav { display: flex; align-items: center; justify-content: space-between; }
+.wordmark {
+  font-family: "Avenir Next", "Helvetica Neue", sans-serif;
+  font-size: 23px; font-weight: 600; letter-spacing: .3em;
+}
+.nav .meta {
+  font-family: "Avenir Next", sans-serif;
+  font-size: 16px; letter-spacing: .16em; color: #9A938A; text-transform: uppercase;
+}
+.dark .nav .meta { color: #7F858E; }
+
+/* ---------- type ---------- */
+.kicker {
+  display: flex; align-items: center; gap: 13px;
+  font-size: 19px; font-weight: 600; letter-spacing: .16em; color: #FF6A00;
+  font-family: "PingFang SC", sans-serif;
+}
+.kicker::before { content: ""; width: 28px; height: 2px; background: #FF6A00; }
+h2 {
+  font-size: 47px; line-height: 1.32; font-weight: 600; letter-spacing: -.6px;
+}
+h2 .accent { color: #FF6A00; }
+h2 .thin { font-weight: 300; }
+.lead { font-size: 24px; line-height: 1.9; color: #565D66; font-weight: 400; }
+.dark .lead { color: #A6ABB4; }
+.small { font-size: 19px; line-height: 1.8; color: #8A8F97; }
+.dark .small { color: #737982; }
+.hr { height: 1px; background: #E6DED2; }
+.dark .hr { background: #2A2D33; }
+.num { font-family: "Avenir Next", sans-serif; font-variant-numeric: tabular-nums; }
+
+/* ---------- components ---------- */
+.card {
+  background: #FFFFFF; border: 1px solid #E9E1D5; border-radius: 18px;
+}
+.dark .card { background: #1B1E23; border-color: #2C3037; }
+.tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  height: 44px; padding: 0 18px; border-radius: 22px;
+  font-size: 19px; color: #4A5058; background: #FFFFFF; border: 1px solid #E5DCCF;
+}
+.dark .tag { background: rgba(255,255,255,.05); border-color: rgba(255,255,255,.12); color: #CFD3D9; }
+
+.kbd {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 54px; height: 54px; padding: 0 14px; border-radius: 10px;
+  background: #FFFFFF; border: 1px solid #DCD3C6;
+  box-shadow: 0 3px 0 #DCD3C6;
+  font-size: 22px; font-weight: 500; color: #33383F; white-space: nowrap;
+}
+.kbd.sm { min-width: 46px; height: 46px; padding: 0 11px; font-size: 19px; border-radius: 9px; }
+.dark .kbd { background: #23262C; border-color: #383C44; box-shadow: 0 3px 0 #383C44; color: #F1EEE8; }
+.plus { font-size: 19px; color: #A8ADB4; margin: 0 2px; font-family: "Avenir Next", sans-serif; }
+.keyrow { display: flex; align-items: center; gap: 6px; }
+
+.dot { width: 7px; height: 7px; border-radius: 50%; background: #FF6A00; display: inline-block; }
+
+/* photo frame */
+.photo { border-radius: 20px; overflow: hidden; position: relative; background: #EDE4D8; }
+.photo img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.caption { margin-top: 14px; font-size: 18px; color: #938B80; letter-spacing: .02em; }
+.dark .caption { color: #767C85; }
+
+/* table */
+.rows { border-top: 1px solid #E6DED2; }
+.dark .rows { border-top-color: #2A2D33; }
+.row { display: flex; align-items: center; border-bottom: 1px solid #E6DED2; }
+.dark .row { border-bottom-color: #2A2D33; }
+</style>
+<style></style>
+</head><body><div class="screen " style="height:900px">
+<div class="pad rel" style="padding-top:44px">
+  <div class="nav">
+    <div class="wordmark">MOVIO</div>
+    <div class="meta">SEAMLESS KVM · 双机键鼠切换器</div>
+  </div>
+</div>
+<div class="pad rel" style="margin-top:56px">
+  <div class="kicker">12 — 多屏</div>
+  <h2 style="margin-top:22px;">只支持左右并排，<br>把主屏放在共享边缘。</h2><p class="lead" style="margin-top:24px">每台电脑的主屏紧邻另一台电脑，扩展屏向外侧延伸；不支持上下堆叠布局。</p></div>
+<div class="pad rel" style="margin-top:34px">
+  <div style="display:flex;align-items:flex-end;gap:8px">
+    <div style="width:98px;height:66px;border:1px solid #D8CDBD;border-radius:8px;background:#EFE8DD;display:flex;align-items:center;justify-content:center;font-size:15px;color:#8A8378">B3</div>
+    <div style="width:98px;height:66px;border:1px solid #D8CDBD;border-radius:8px;background:#EFE8DD;display:flex;align-items:center;justify-content:center;font-size:15px;color:#8A8378">B2</div>
+    <div style="width:98px;height:88px;border:2px solid #2F3A45;border-radius:8px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;color:#2F3A45;font-weight:600">B1</div>
+    <div style="width:8px;height:88px;display:flex;align-items:center;justify-content:center">
+      <div style="width:2px;height:88px;border-left:2px dashed #FF6A00"></div>
+    </div>
+    <div style="width:98px;height:88px;border:2px solid #FF6A00;border-radius:8px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;color:#C25A16;font-weight:600">A1</div>
+    <div style="width:98px;height:66px;border:1px solid #FFD6B8;border-radius:8px;background:#FFF1E6;display:flex;align-items:center;justify-content:center;font-size:15px;color:#C58A5E">A2</div>
+    <div style="width:98px;height:66px;border:1px solid #FFD6B8;border-radius:8px;background:#FFF1E6;display:flex;align-items:center;justify-content:center;font-size:15px;color:#C58A5E">A3</div>
+  </div>
+  <div style="display:flex;justify-content:space-between;margin-top:10px;font-size:16px;color:#8A8F97">
+    <div style="width:310px;text-align:center">电脑 B　扩展 · 扩展 · 主屏</div>
+    <div style="width:310px;text-align:center">电脑 A　主屏 · 扩展 · 扩展</div>
+  </div>
+</div>
+<div class="pad rel" style="margin-top:26px">
+  <div style="display:flex;gap:16px">
+    <div style="flex:1;border-top:2px solid #FF6A00;padding-top:14px">
+      <div style="font-size:20px;font-weight:600">Windows / macOS</div>
+      <p style="font-size:18px;line-height:1.7;color:#6B7178;margin-top:6px">多屏使用兼容模式，手感与单屏略有不同。</p>
+    </div>
+    <div style="flex:1;border-top:2px solid #2F3A45;padding-top:14px">
+      <div style="font-size:20px;font-weight:600">Linux</div>
+      <p style="font-size:18px;line-height:1.7;color:#6B7178;margin-top:6px">由桌面环境管理，屏幕数量建议设为 1。</p>
+    </div>
+  </div>
+</div>
+<div class="rel" style="margin:26px 56px 0;background:#F6EDE2;border-radius:16px;padding:24px 26px">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <div>
+      <div style="font-size:21px;font-weight:600">显示器高度不一致？校准一次。</div>
+      <p style="font-size:18px;line-height:1.7;color:#6B7178;margin-top:6px">把光标停在较小屏幕的顶边 / 底边高度，各按一次。</p>
+    </div>
+    <div class="keyrow"><span class="kbd sm">右 Shift</span><span class="plus">+</span><span class="kbd sm">F12</span><span class="plus">+</span><span class="kbd sm">Y</span></div>
+  </div>
+</div>
+</div></body></html>

@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<title>13_固件升级</title>
+<style>* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 750px; }
+body {
+  font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  color: #15171C;
+  background: #FAF7F2;
+}
+.screen { position: relative; width: 750px; overflow: hidden; background: #FAF7F2; }
+.screen.dark { background: #14161A; color: #F5F2EC; }
+.screen.cream { background: #F2EBE1; }
+.screen.dark::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(680px 420px at 88% 6%, rgba(255,106,0,.20), transparent 62%);
+}
+.pad { padding-left: 56px; padding-right: 56px; }
+.rel { position: relative; z-index: 2; }
+
+/* ---------- top nav ---------- */
+.nav { display: flex; align-items: center; justify-content: space-between; }
+.wordmark {
+  font-family: "Avenir Next", "Helvetica Neue", sans-serif;
+  font-size: 23px; font-weight: 600; letter-spacing: .3em;
+}
+.nav .meta {
+  font-family: "Avenir Next", sans-serif;
+  font-size: 16px; letter-spacing: .16em; color: #9A938A; text-transform: uppercase;
+}
+.dark .nav .meta { color: #7F858E; }
+
+/* ---------- type ---------- */
+.kicker {
+  display: flex; align-items: center; gap: 13px;
+  font-size: 19px; font-weight: 600; letter-spacing: .16em; color: #FF6A00;
+  font-family: "PingFang SC", sans-serif;
+}
+.kicker::before { content: ""; width: 28px; height: 2px; background: #FF6A00; }
+h2 {
+  font-size: 47px; line-height: 1.32; font-weight: 600; letter-spacing: -.6px;
+}
+h2 .accent { color: #FF6A00; }
+h2 .thin { font-weight: 300; }
+.lead { font-size: 24px; line-height: 1.9; color: #565D66; font-weight: 400; }
+.dark .lead { color: #A6ABB4; }
+.small { font-size: 19px; line-height: 1.8; color: #8A8F97; }
+.dark .small { color: #737982; }
+.hr { height: 1px; background: #E6DED2; }
+.dark .hr { background: #2A2D33; }
+.num { font-family: "Avenir Next", sans-serif; font-variant-numeric: tabular-nums; }
+
+/* ---------- components ---------- */
+.card {
+  background: #FFFFFF; border: 1px solid #E9E1D5; border-radius: 18px;
+}
+.dark .card { background: #1B1E23; border-color: #2C3037; }
+.tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  height: 44px; padding: 0 18px; border-radius: 22px;
+  font-size: 19px; color: #4A5058; background: #FFFFFF; border: 1px solid #E5DCCF;
+}
+.dark .tag { background: rgba(255,255,255,.05); border-color: rgba(255,255,255,.12); color: #CFD3D9; }
+
+.kbd {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 54px; height: 54px; padding: 0 14px; border-radius: 10px;
+  background: #FFFFFF; border: 1px solid #DCD3C6;
+  box-shadow: 0 3px 0 #DCD3C6;
+  font-size: 22px; font-weight: 500; color: #33383F; white-space: nowrap;
+}
+.kbd.sm { min-width: 46px; height: 46px; padding: 0 11px; font-size: 19px; border-radius: 9px; }
+.dark .kbd { background: #23262C; border-color: #383C44; box-shadow: 0 3px 0 #383C44; color: #F1EEE8; }
+.plus { font-size: 19px; color: #A8ADB4; margin: 0 2px; font-family: "Avenir Next", sans-serif; }
+.keyrow { display: flex; align-items: center; gap: 6px; }
+
+.dot { width: 7px; height: 7px; border-radius: 50%; background: #FF6A00; display: inline-block; }
+
+/* photo frame */
+.photo { border-radius: 20px; overflow: hidden; position: relative; background: #EDE4D8; }
+.photo img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.caption { margin-top: 14px; font-size: 18px; color: #938B80; letter-spacing: .02em; }
+.dark .caption { color: #767C85; }
+
+/* table */
+.rows { border-top: 1px solid #E6DED2; }
+.dark .rows { border-top-color: #2A2D33; }
+.row { display: flex; align-items: center; border-bottom: 1px solid #E6DED2; }
+.dark .row { border-bottom-color: #2A2D33; }
+</style>
+<style></style>
+</head><body><div class="screen " style="height:1060px">
+<div class="pad rel" style="padding-top:44px">
+  <div class="nav">
+    <div class="wordmark">MOVIO</div>
+    <div class="meta">SEAMLESS KVM · 双机键鼠切换器</div>
+  </div>
+</div>
+<div class="pad rel" style="margin-top:56px">
+  <div class="kicker">13 — 固件</div>
+  <h2 style="margin-top:22px;">一个 UF2，<br>两颗芯片自动同步。</h2><p class="lead" style="margin-top:24px">两颗 RP2040 使用同一个 movio.uf2，芯片角色由硬件自动探测。只需写入一颗，另一颗会通过 UART 自动拉取并写入。</p></div>
+<div class="pad rel" style="margin-top:38px;display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px">
+  <div style="background:#fff;border:1px solid #E9E1D5;border-radius:14px;padding:18px 14px">
+    <div class="num" style="width:30px;height:30px;border-radius:15px;background:#FF6A00;color:#fff;font-size:15px;display:flex;align-items:center;justify-content:center">1</div>
+    <div style="font-size:19px;font-weight:600;margin-top:12px;line-height:1.4">下载固件</div>
+    <div style="font-size:16px;line-height:1.6;color:#7A8087;margin-top:6px">movio.uf2<br>核对版本</div>
+  </div>
+  <div style="background:#fff;border:1px solid #E9E1D5;border-radius:14px;padding:18px 14px">
+    <div class="num" style="width:30px;height:30px;border-radius:15px;background:#FF6A00;color:#fff;font-size:15px;display:flex;align-items:center;justify-content:center">2</div>
+    <div style="font-size:19px;font-weight:600;margin-top:12px;line-height:1.4">进入配置模式</div>
+    <div style="font-size:16px;line-height:1.6;color:#7A8087;margin-top:6px">快捷键<br>C + O</div>
+  </div>
+  <div style="background:#fff;border:1px solid #E9E1D5;border-radius:14px;padding:18px 14px">
+    <div class="num" style="width:30px;height:30px;border-radius:15px;background:#FF6A00;color:#fff;font-size:15px;display:flex;align-items:center;justify-content:center">3</div>
+    <div style="font-size:19px;font-weight:600;margin-top:12px;line-height:1.4">复制固件</div>
+    <div style="font-size:16px;line-height:1.6;color:#7A8087;margin-top:6px">拖入 MOVIO 盘<br>根目录</div>
+  </div>
+  <div style="background:#fff;border:1px solid #E9E1D5;border-radius:14px;padding:18px 14px">
+    <div class="num" style="width:30px;height:30px;border-radius:15px;background:#2F3A45;color:#fff;font-size:15px;display:flex;align-items:center;justify-content:center">4</div>
+    <div style="font-size:19px;font-weight:600;margin-top:12px;line-height:1.4">自动同步</div>
+    <div style="font-size:16px;line-height:1.6;color:#7A8087;margin-top:6px">两颗芯片依次<br>写入并重启</div>
+  </div>
+</div>
+<div class="pad rel" style="margin-top:28px">
+  <div style="background:#F6EDE2;border-radius:16px;padding:24px 26px">
+    <div style="display:flex;gap:12px;margin-bottom:10px"><span style="font-size:17px;color:#FF6A00;font-weight:600;letter-spacing:.1em;white-space:nowrap">只升级</span><p style="font-size:18px;line-height:1.7;color:#5C636B">自动同步只在“对方版本更新”时触发，不会降级。</p></div>
+    <div style="display:flex;gap:12px;margin-bottom:10px"><span style="font-size:17px;color:#FF6A00;font-weight:600;letter-spacing:.1em;white-space:nowrap">救砖</span><p style="font-size:18px;line-height:1.7;color:#5C636B">全新主板或升级失败，按住 BOOTSEL 上电进入 RPI-RP2，分别刷写两颗。</p></div>
+    <div style="display:flex;gap:12px"><span style="font-size:17px;color:#FF6A00;font-weight:600;letter-spacing:.1em;white-space:nowrap">勿断电</span><p style="font-size:18px;line-height:1.7;color:#5C636B">升级期间保持两台电脑供电与 USB 连接，不要拔线或强制重启。</p></div>
+  </div>
+</div>
+<div class="pad rel" style="margin-top:22px">
+  <p class="caption">设备不会自动联网检查更新；请从项目发布页下载 UF2，并在升级后确认两颗芯片的版本与校验值一致。</p>
+</div>
+</div></body></html>
