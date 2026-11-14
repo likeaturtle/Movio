@@ -2,6 +2,8 @@
 
 **English** · [简体中文](README_zh.md)
 
+<a href="https://certification.oshwa.org/cn000033.html"><img src="img/oshwa-cn000033-badge.svg" alt="OSHWA certified open source hardware — UID CN000033" width="280"></a>
+
 Movio is an open-source hardware KVM-style switch that lets a single keyboard and mouse control two computers. Move the pointer across the shared edge of the screen and the cursor continues onto the other computer; the keyboard follows automatically. Both computers see a standard USB HID keyboard and mouse, so nothing needs to be installed and switching does not re-enumerate the devices.
 
 Movio is a fork of [DeskHop](https://github.com/hrvach/deskhop) with a redesigned bilingual web configuration page, firmware stability fixes, smoother mouse behavior and a one-command build system. It is **not a video KVM**: monitors, speakers, cameras and USB storage stay connected to their own computers, and no data crosses between them.
@@ -47,6 +49,7 @@ Movio sits between your keyboard/mouse and two computers. It keeps a USB connect
 | Board | Power-isolated 2-layer PCB, 80 mm × 50 mm, two onboard RP2040 chips; design files in [`hardware/`](hardware/) |
 | Firmware | v0.80, UF2 format, two RP2040 chips on one PCB |
 | Software | None on either computer |
+| Certification | [OSHWA open source hardware](https://certification.oshwa.org/cn000033.html), UID CN000033 |
 
 ### What Movio does — and does not do
 
@@ -901,7 +904,21 @@ A: No. It provides signal isolation and no data channel, but it is not a certifi
 - Firmware downloads: [dl.acenova.tech](https://dl.acenova.tech) · [GitHub Releases](https://github.com/likeaturtle/Movio/releases)
 - Issues: [GitHub Issues](https://github.com/likeaturtle/Movio/issues)
 - Upstream: [hrvach/deskhop](https://github.com/hrvach/deskhop)
-- Open source hardware certification: [OSHWA DE000149](https://certification.oshwa.org/de000149.html)
+
+### Open source hardware certification
+
+Movio is certified open source hardware by the [Open Source Hardware Association](https://www.oshwa.org/). The certification covers the hardware design, the firmware and the documentation.
+
+| Item | Detail |
+|------|--------|
+| Certification UID | [CN000033](https://certification.oshwa.org/cn000033.html) |
+| Certification date | 13 November 2026 |
+| Country | China |
+| Certified version | 1.3.2 (as registered with OSHWA) |
+| Licenses | Hardware, software and documentation: GPL-3.0-only |
+| Previous version (DeskHop) | [DE000149](https://certification.oshwa.org/de000149.html) |
+
+The certification mark is displayed at the top of this README and may be used together with the UID in product documentation and promotional material, following the [OSHWA certification mark usage guidelines](https://certification.oshwa.org/mark-usage.html). The mark is stored in this repository as [stacked](img/oshwa-cn000033-stacked.svg), [wide](img/oshwa-cn000033-wide.svg) and [white-backed badge](img/oshwa-cn000033-badge.svg) SVG files; the badge keeps the mark legible in dark mode.
 
 ### License
 

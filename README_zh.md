@@ -2,6 +2,8 @@
 
 [English](README.md) · **简体中文**
 
+<a href="https://certification.oshwa.org/cn000033.html"><img src="img/oshwa-cn000033-badge.svg" alt="OSHWA 开源硬件认证 — UID CN000033" width="280"></a>
+
 Movio 是一款开源硬件键鼠切换器，让一套键盘和鼠标同时控制两台电脑。把光标移到两台电脑共享的屏幕边缘并继续移动，光标就会穿到另一台电脑，键盘输入也会自动跟随。两台电脑都把 Movio 识别为标准 USB HID 键鼠设备，因此无需安装任何软件，切换时也不会重新枚举设备。
 
 Movio 基于 [DeskHop](https://github.com/hrvach/deskhop) 开发，重新设计了中英文配置页，修复了固件稳定性问题，优化了鼠标行为，并提供一键构建脚本。它**不是视频 KVM**：显示器、音箱、摄像头和 USB 存储仍直接连接各自的电脑，两台电脑之间没有数据通道。
@@ -47,6 +49,7 @@ Movio 位于键盘、鼠标与两台电脑之间。它同时与两台电脑保�
 | 板卡 | 电源隔离版 2 层板，80 mm × 50 mm，两颗板载 RP2040，设计文件见 [`hardware/`](hardware/) |
 | 固件 | v0.80，UF2 格式，同一块 PCB 上的两颗 RP2040 |
 | 软件 | 两台电脑均无需安装 |
+| 认证 | [OSHWA 开源硬件认证](https://certification.oshwa.org/cn000033.html)，UID CN000033 |
 
 ### 能做什么，不能做什么
 
@@ -902,11 +905,26 @@ Movio 在主流操作系统上使用标准 USB HID 协议，通常不需要驱�
 - 问题反馈：[GitHub Issues](https://github.com/likeaturtle/Movio/issues)
 - 上游项目：[hrvach/deskhop](https://github.com/hrvach/deskhop)
 
-### 15.3 许可证
+### 15.3 开源硬件认证
+
+Movio 已通过[开源硬件协会（OSHWA）](https://www.oshwa.org/)的开源硬件认证，认证范围包括硬件设计、固件和文档。
+
+| 项目 | 说明 |
+|------|------|
+| 认证 UID | [CN000033](https://certification.oshwa.org/cn000033.html) |
+| 认证日期 | 2026 年 11 月 13 日 |
+| 国家/地区 | 中国 |
+| 认证版本 | 1.3.2（OSHWA 登记版本） |
+| 许可证 | 硬件、软件与文档均为 GPL-3.0-only |
+| 上一版本（DeskHop） | [DE000149](https://certification.oshwa.org/de000149.html) |
+
+本 README 顶部展示了 OSHWA 认证标识。该标识可以按照 [OSHWA 认证标识使用规范](https://certification.oshwa.org/mark-usage.html)与 UID 一起用于产品文档和宣传材料；本仓库提供[竖排](img/oshwa-cn000033-stacked.svg)、[横排](img/oshwa-cn000033-wide.svg)和[白底徽标](img/oshwa-cn000033-badge.svg)三种 SVG 版本，其中白底徽标用于在深色模式下保持清晰可读。
+
+### 15.4 许可证
 
 Movio 是自由、开源的硬件项目。固件以 **GNU General Public License v3** 发布，完整文本见 [LICENSE](LICENSE)。
 
-### 15.4 免责声明
+### 15.5 免责声明
 
 构建和使用本项目风险由您自行承担，请采取必要的安全预防措施。项目作者和贡献者不对因使用本产品造成的设备损坏、数据丢失、工作中断或其他损失承担责任。Movio 按“现状”提供，不附带任何明示或暗示的担保。
 
